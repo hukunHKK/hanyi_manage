@@ -10,6 +10,10 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path:'/',
+      redirect:'/dataBank/mountings'
+    },
+    {
       path: '/home',
       name: 'home',
       component: Home
@@ -35,8 +39,57 @@ export default new Router({
         {
           path: '/dataBank/mountings',
           name: 'mountings',
+          meta:{
+            name:'配件表'
+          },
           component: () => import('./views/dataBank/mountings.vue')
-        }
+        },
+        {
+          path: '/dataBank/client',
+          name: 'client',
+          meta:{
+            name:'客户表'
+          },
+          component: () => import('./views/dataBank/client.vue')
+        },
+      ]
+    },
+    {
+      path:'/systemManage',
+      name:'systemManage',
+      component: Home,
+      children:[
+        {
+          path: '/systemManage/accountManage',
+          name: 'accountManage',
+          meta:{
+            name:'账户管理'
+          },
+          component: () => import('./views/systemManage/accountManage.vue')
+        },
+      ]
+    },
+    {
+      path:'/develop',
+      name:'develop',
+      component: Home,
+      children:[
+        {
+          path: '/develop/mountings',
+          name: 'mountings',
+          meta:{
+            name:'配件建档'
+          },
+          component: () => import('./views/develop/mountings.vue')
+        },
+        {
+          path: '/develop/product',
+          name: 'product',
+          meta:{
+            name:'产品建档'
+          },
+          component: () => import('./views/develop/product.vue')
+        },
       ]
     }
   ]

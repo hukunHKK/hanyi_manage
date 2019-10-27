@@ -1,15 +1,61 @@
+.content-header{
+    font-size: 18px;
+    font-weight: 600;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 2px;
+}
 .query-heard{
   // border-bottom: 1px solid RGB(220,222,226);
+  padding-top: 15px;
   .ivu-form-item{
     margin-bottom: 13px;
   }
+  .h-form-bottom{
+    float:right;
+    .ivu-form-item-content{
+      button{
+        margin-left: 10px;
+      }
+      button:first-child{
+        margin-left: 0px;
+      }  
+    }
+  }
 }
 .content{
+  height:100%;
+  // position:relative;
+  .table-height{
+    height:calc(100% - 58px);
+    .ivu-table{
+      .ivu-table-body{
+        height: calc(100% - 40px);
+        overflow-y: auto;
+        overflow-x: hidden;
+      }  
+    }
+  }
   .page-wrap{
     text-align: right;
     margin-top: 15px;
+    button{
+      margin-right:15px;
+    }
+  }
+  thead{
+    color: #fff;
+    th{
+      background-color: #3876C9;
+    }
   }
 }
 .ivu-select-selection{
   width: 186px;
+}
+.modal-submit{
+  text-align: center;
+  margin: 20px;
+  button{
+    margin-left:20px;
+  }
 }
