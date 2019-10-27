@@ -1,0 +1,6 @@
+.float-right{
+  float:right;
+}
+.border-1px{
+	border:1px solid #eee;
+}
