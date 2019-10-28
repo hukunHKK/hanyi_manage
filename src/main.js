@@ -15,6 +15,7 @@ Vue.use(ViewUI);
 Vue.component('my-modal',MyModal);
 Vue.prototype.$global = global;
 
+
 new Vue({
   router,
   store,
