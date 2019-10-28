@@ -9,10 +9,12 @@ import './index.stylus';
 import global from './globalConfig';
 
 import MyModal from './components/myModal.vue';
+import ImgUpload from './components/imgUpload.vue';
 
 Vue.config.productionTip = false
 Vue.use(ViewUI);
 Vue.component('my-modal',MyModal);
+Vue.component('img-upload',ImgUpload);
 Vue.prototype.$global = global;
 
 

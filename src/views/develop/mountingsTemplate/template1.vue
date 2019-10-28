@@ -31,19 +31,17 @@
         <Input placeholder="可设定同款编号，多个编号以、隔开" />
       </FormItem>
     </Form>
-    <div class="border-2px" style="height:300px;margin-top:20px;display: flex;" @drop='drop'>
-      <div v-if='uploadImgList.length===0' style="text-align: center;line-height: 300px;width:100%;">
-        拖拽图片进行上传，最多上传5张，每张最大2M
-      </div>
-      <img :src="item" v-for='item in uploadImgList' style="width: 20%;">
+    <!-- 图片上传 -->
+    <div class="border-2px" style="height:300px;margin-top:20px;">
+      <img-upload :upload-img-list.sync='uploadImgList'/>
     </div>
-    <div class="border-2px" style="margin-top:20px;padding: 10px;" @drop='drop'>
+    <div class="border-2px" style="margin-top:20px;padding: 10px;">
       <Button style="margin: 15px;float: right;" @click="manufacturersModal=true">选择厂商</Button>
       <div class="manufacturers-info">厂商编号：{{manufacturersInfo.id}}</div>
       <div class="manufacturers-info">厂商联系人：{{manufacturersInfo.contact}}</div>
       <div class="manufacturers-info">厂商详细地址：{{manufacturersInfo.address}}</div>
     </div>
-    <div class="border-2px" style="margin-top:20px;padding: 10px;" @drop='drop'>
+    <div class="border-2px" style="margin-top:20px;padding: 10px;">
       <Form :label-width="115" inline label-colon class="border-2px"
         style="padding-top:12px;padding-right: 12px;margin-top:20px;">
         <FormItem label="厂商内部编号">
@@ -267,20 +265,12 @@
       typeCanSubmit() {
 
       }
-    },
-    created() {
-      document.ondragover = function(e) {
-        e.preventDefault()
-      }
-      document.ondrop = function (e) {
-        e.preventDefault()
-      }
     }
   };
 </script>
 <style lang="stylus" scoped>
   .template {
-    padding: 20px;
+    padding: 48px;
     .ivu-form-item {
       margin-bottom: 12px;
     }

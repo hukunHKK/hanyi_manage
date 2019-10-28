@@ -52,15 +52,21 @@
         <Page :total="100" show-elevator />
       </div>
     </div>
-    <my-modal :show="showAdd">
-      <template1 :templateData='templateData' v-if='templateData.type === "template1"'/>
-      <template2 :templateData='templateData' v-if='templateData.type === "template2"'/>
+    <my-modal :show.sync="showAdd" modal-title='研发-配件建档'>
+      <template #btn>
+        <Button type="primary">保存草稿</Button>
+      </template>
+      <template #content>
+        <template2 :templateData='templateData' v-if='templateData.type === "template2"'/>
+        <template1 :templateData='templateData' v-if='templateData.type === "template1"'/>
+      </template>
     </my-modal>
   </div>
 </template>
 <script>
 import Template1 from './mountingsTemplate/template1'
 import Template2 from './mountingsTemplate/template2'
+import { log } from 'util';
   export default {
     components:{
       template1:Template1,
