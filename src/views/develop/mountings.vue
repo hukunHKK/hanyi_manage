@@ -54,7 +54,7 @@
     </div>
     <my-modal :show.sync="showAdd" modal-title='研发-配件建档'>
       <template #btn>
-        <Button type="primary">保存草稿</Button>
+        <Button type="primary" style="width:85px;">暂存</Button>
       </template>
       <template #content>
         <template2 :templateData='templateData' v-if='templateData.type === "template2"'/>
@@ -118,7 +118,7 @@ import Template2 from './mountingsTemplate/template2'
             key: 'address'
           },
           {
-            title: 'Action',
+            title: '操作',
             slot: 'action',
             width: 150,
             align: 'center'

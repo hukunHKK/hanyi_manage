@@ -24,7 +24,7 @@
       </Form>
     </div>
     <div slot="footer">
-      <Button type="error" size="large" long @click="submitType">确定</Button>
+      <Button type="primary" size="large" long @click="submitType">确定</Button>
     </div>
   </Modal>
 </template>

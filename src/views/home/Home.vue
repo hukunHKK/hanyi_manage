@@ -123,6 +123,7 @@ export default {
 .user-info {
   float: right;
   color: #fff;
+  margin-right:30px;
 }
 
 .user-name {

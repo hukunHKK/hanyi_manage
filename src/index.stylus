@@ -51,9 +51,9 @@
     }
   }
 }
-.ivu-select-selection{
-  width: 186px;
-}
+// .ivu-select-selection{
+//   width: 186px;
+// }
 .modal-submit{
   text-align: center;
   margin: 20px;
