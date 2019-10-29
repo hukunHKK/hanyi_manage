@@ -1,17 +1,8 @@
 <template>
   <div class="template" ref="template1">
-    <Form :label-width="80" inline label-colon class="border-2px" style="padding-top:12px;">
-      <FormItem label="配件类型">
-        <Select v-model="templateData.type">
-          <Option value="penzi">盆子</Option>
-          <Option value="huaban">花瓣</Option>
-          <Option value="yezi">叶子</Option>
-        </Select>
-      </FormItem>
-      <FormItem :label-width="0">
-        <Button style="margin-right: 5px" @click="typeManageModal=true">配件类型管理</Button>
-      </FormItem>
-      <FormItem label="建档模板" class="float-right">
+    <div class="info-title"><span>基本信息</span></div>
+    <Form :label-width="115" inline label-colon class="border-1px" style="padding-top:12px;">
+      <FormItem label="建档模板">
         <Select v-model="templateData.type">
           <Option value="template1">模板1</Option>
           <Option value="template2">模板2</Option>
@@ -21,8 +12,19 @@
           <Option value="special-froth">特殊类 泡沫</Option>
         </Select>
       </FormItem>
+      <FormItem label="配件类型">
+        <Select v-model="templateData.a">
+          <!-- <Option value="penzi">盆子</Option>
+          <Option value="huaban">花瓣</Option>
+          <Option value="yezi">叶子</Option> -->
+          <Option v-for="item in typeList" :value="item" :key="item">{{ item }}</Option>
+        </Select>
+      </FormItem>
+      <FormItem :label-width="0">
+        <Button type="primary" style="margin-right: 5px" @click="typeManageModal=true">配件类型管理</Button>
+      </FormItem>
     </Form>
-    <Form :label-width="80" label-colon class="border-2px"
+    <Form :label-width="115" label-colon class="border-1px"
       style="padding-top:12px;padding-right: 12px;margin-top:20px;">
       <FormItem label="唯一编号">
         <Input style="width: 255px" placeholder="请输入" />
@@ -32,17 +34,43 @@
       </FormItem>
     </Form>
     <!-- 图片上传 -->
-    <div class="border-2px" style="height:300px;margin-top:20px;">
+    <div class="border-1px" style="height:160px;margin-top:20px;">
       <img-upload :upload-img-list.sync='uploadImgList'/>
     </div>
-    <div class="border-2px" style="margin-top:20px;padding: 10px;">
-      <Button style="margin: 15px;float: right;" @click="manufacturersModal=true">选择厂商</Button>
-      <div class="manufacturers-info">厂商编号：{{manufacturersInfo.id}}</div>
-      <div class="manufacturers-info">厂商联系人：{{manufacturersInfo.contact}}</div>
-      <div class="manufacturers-info">厂商详细地址：{{manufacturersInfo.address}}</div>
+    <div class="info-title">
+      <span>厂商信息</span>
+      <Button type="primary" @click="manufacturersModal=true">选择厂商</Button>
     </div>
-    <div class="border-2px" style="margin-top:20px;padding: 10px;">
-      <Form :label-width="115" inline label-colon class="border-2px"
+    <div class="border-1px" style="margin-top:20px;padding: 10px;">
+      <!-- <div class="manufacturers-info">厂商编号：{{manufacturersInfo.id}}</div>
+      <div class="manufacturers-info">厂商联系人：{{manufacturersInfo.contact}}</div>
+      <div class="manufacturers-info">厂商详细地址：{{manufacturersInfo.address}}</div> -->
+      <Form :label-width="115" label-colon inline class="manufacturers-info">
+        <FormItem label="厂商编号">
+          <input type="text" v-model='manufacturersInfo.id' class="disabled-input" disabled>
+        </FormItem>
+        <FormItem label="厂商名称">
+          <input type="text" v-model='manufacturersInfo.name' class="disabled-input name" disabled>
+        </FormItem>
+        <FormItem label="厂商联系人">
+          <input type="text" v-model='manufacturersInfo.contact' class="disabled-input" disabled>
+        </FormItem>
+        <FormItem label="联系电话">
+          <input type="text" v-model='manufacturersInfo.phone' class="disabled-input" disabled>
+        </FormItem>
+        <FormItem label="邮箱地址">
+          <input type="text" v-model='manufacturersInfo.email' style="width:360px;" class="disabled-input email" disabled>
+        </FormItem>
+        <FormItem label="厂商详细地址">
+          <input type="text" v-model='manufacturersInfo.address' class="disabled-input address" disabled>
+        </FormItem>
+      </Form>
+    </div>
+    <div class="info-title">
+      <span>配件属性</span>
+    </div>
+    <div class="border-1px texture-prop" style="margin-top:20px;padding:0 10px 10px;">
+      <Form :label-width="115" inline label-colon
         style="padding-top:12px;padding-right: 12px;margin-top:20px;">
         <FormItem label="厂商内部编号">
           <Input style="width: 255px" placeholder="请输入厂商内部编号" />
@@ -54,37 +82,24 @@
           <Input type="textarea" placeholder="请输入名称\描述" style="width:100%;"/>
         </FormItem>
         <FormItem label="" style="width:100%;" :label-width="20">
-          <Button style="margin-right: 5px" @click="textureManageModal=true">配件材质</Button>
+          <Button style="margin-right: 5px" type="primary" @click="textureManageModal=true">配件材质</Button>
+          {{textureStr}}
         </FormItem>
       </Form>
+      <div style="margin-bottom: 10px;">
+        <span style="margin-left:25px;color: #0058cc;vertical-align: super;">配件属性：</span>
+        <div @click="addProp" class="prop-add-btn">
+          <Icon type="md-add" style="font-size: 30px;"/>
+        </div>
+      </div>
+      <div style="padding:0 0 10px 37px;" v-for='(item,index) in propList'>
+        <Input v-model='item.key' maxlength="8" style="width: 170px" placeholder="请输入名称" />
+        <Input v-model='item.value' maxlength="30" style="width: 296px;margin-left: 15px;" placeholder="请输入描述" />
+        <div class="remove-btn" @click="removeProp(index)">
+          <Icon type="md-remove" />
+        </div>
+      </div>
     </div>
-    <Modal v-model="typeManageModal" width="360">
-      <p slot="header" style="color:#f60;text-align:center;height:22px;">
-        <span>
-          配件类型管理
-          <div class="add-btn" @click="addType">
-            +
-          </div>
-        </span>
-      </p>
-      <div style="text-align:center">
-        <Form :label-width="80" inline label-colon style="padding-top:12px;">
-          <FormItem :label-width="0" v-for="(item,index) in typeList" style="margin-bottom:0;" :key="index">
-            <div style="margin-bottom:10px;">
-              <!-- <Input :value="item.name" @input="change($event,index)" style="width: 255px" placeholder="只能输入中文英文数字，长度限制1-20"/> -->
-              <input type="text" :value="item.name" @input="change($event,index)" class="ivu-input" style="width: 255px"
-                maxlength="20" required placeholder="只能输入中文英文数字，长度限制1-20">
-              <div class="remove-btn" @click="removeType(index)">
-                <Icon type="md-remove" />
-              </div>
-            </div>
-          </FormItem>
-        </Form>
-      </div>
-      <div slot="footer">
-        <Button type="error" size="large" long :disabled='typeCanSubmit' @click="submitType">确定</Button>
-      </div>
-    </Modal>
     <Modal v-model="manufacturersModal" width="700">
       <p slot="header" style="color:#f60;text-align:center;height:22px;">
         <span>
@@ -115,36 +130,13 @@
         </div>
       </div>
       <div slot="footer">
-        <Button type="error" size="large" long :disabled='typeCanSubmit' @click="chooseManufacturers">确定</Button>
+        <Button type="error" size="large" long @click="chooseManufacturers">确定</Button>
       </div>
     </Modal>
-    <Modal v-model="textureManageModal" width="360">
-      <p slot="header" style="color:#f60;text-align:center;height:22px;">
-        <span>
-          配件材质
-          <div class="add-btn" @click="addType">
-            +
-          </div>
-        </span>
-      </p>
-      <div style="text-align:center">
-        <Form :label-width="80" inline label-colon style="padding-top:12px;">
-          <FormItem :label-width="0" v-for="(item,index) in typeList" style="margin-bottom:0;" :key="index">
-            <div style="margin-bottom:10px;">
-              <!-- <Input :value="item.name" @input="change($event,index)" style="width: 255px" placeholder="只能输入中文英文数字，长度限制1-20"/> -->
-              <input type="text" :value="item.name" @input="change($event,index)" class="ivu-input" style="width: 255px"
-                maxlength="20" required placeholder="只能输入中文英文数字，长度限制1-20">
-              <div class="remove-btn" @click="removeType(index)">
-                <Icon type="md-remove" />
-              </div>
-            </div>
-          </FormItem>
-        </Form>
-      </div>
-      <div slot="footer">
-        <Button type="error" size="large" long :disabled='typeCanSubmit' @click="submitType">确定</Button>
-      </div>
-    </Modal>
+    <single-input-manage :modal-state.sync='textureManageModal' :type-list.sync='textureList' width='360'>
+    </single-input-manage>
+    <single-input-manage :modal-state.sync='typeManageModal' :type-list.sync='typeList' width='360'>
+    </single-input-manage>
   </div>
 </template>
 <script>
@@ -161,9 +153,9 @@
         manufacturersModal:false,
         textureManageModal:false,
         value: '',
-        typeList: [{
-          name: ''
-        }],
+        typeList: [],
+        textureList: [],
+        propList: [],
         tableKey:'',
         manufacturersInfo:{},
         uploadImgList:[],
@@ -206,50 +198,6 @@
       };
     },
     methods: {
-      addType() {
-        if (!this.typeList.some(item => item.name === '')) {
-          this.typeList.push({
-            name: ''
-          });
-        }
-      },
-      removeType(index) {
-        this.typeList.splice(index, 1)
-      },
-      submitType() {
-        this.typeList = this.typeList.filter(item => item.name !== '')
-      },
-      change(event, index) {
-        let value = event.target.value.replace(this.$global.cneReg, '');
-        event.target.value = value;
-        this.typeList[index].name = value
-      },
-      drop(e){
-        let fileInfo = e.dataTransfer.files[0];
-        let size = Math.ceil(fileInfo.size / 1024);
-        let type = fileInfo.type.indexOf("image");
-        if (size > 2048) {
-          this.$Message.error({
-            background: true,
-            content: '图片尺寸过大，最大2M'
-          });
-          return;
-        }
-        if (type == -1) {
-          this.$Message.error({
-            background: true,
-            content: '只能上传图片格式的文件'
-          });
-          return;
-        }
-        let reader = new FileReader()
-        //将图片转成base64格式
-        reader.readAsDataURL(fileInfo)
-        reader.onload=(e)=>{
-          this.uploadImgList.push(e.target.result)
-        }
-        e.preventDefault();
-      },
       checkOne(row,index){
         this.manufacturersList.forEach(item=>item.checked=false)
         this.manufacturersList[index].checked = true
@@ -259,46 +207,109 @@
       chooseManufacturers(){
         this.manufacturersModal = false
         this.manufacturersInfo = this.tempManufacturers
+      },
+      addProp(){
+        this.propList.push({key:'',value:''})
+      },
+      removeProp(index){
+        this.propList.splice(index,1)
       }
     },
     computed: {
-      typeCanSubmit() {
-
+      textureStr() {
+        if(this.textureList.length === 0){
+          return ''
+        }else if(this.textureList.length === 1){
+          return '含 '+this.textureList.join('、')
+        }else{
+          return '含 '+this.textureList.join('、')+'；'
+        }
       }
     }
   };
 </script>
 <style lang="stylus" scoped>
   .template {
-    padding: 48px;
+    padding: 0 48px;
+    .info-title{
+      color: #0058cc;
+      border-left: 4px solid #0058cc;
+      height: 21px;
+      font-weight: bold;
+      font-size: 16px;
+      padding-left: 8px;
+      margin: 20px 0;
+      span{
+        vertical-align: 3px;
+      }
+      button{
+        position: relative;
+        left: 40px;
+        top: -5px;
+      }
+    }
     .ivu-form-item {
       margin-bottom: 12px;
     }
-    .manufacturers-info{
-      font-size: 16px;
-      padding: 5px 15px 5px;
+    @media screen and (min-width:1550px) {
+      .manufacturers-info .name{
+        width: 710px !important;
+      }
+      .manufacturers-info .address{
+        width: 1060px !important;
+      }
     }
-  }
-
-  .remove-btn {
-    display: inline-block;
-    font-size: 18px;
-    border: 1px solid #dcdee2;
-    border-radius: 3px;
-    margin-left: 11px;
-    padding: 0 5px;
-    height: 32px;
-    cursor: pointer;
-  }
-
-  .add-btn {
-    display: inline-block;
-    font-size: 18px;
-    border: 1px solid #dcdee2;
-    border-radius: 3px;
-    margin-left: 11px;
-    padding: 0 5px;
-    height: 22px;
-    cursor: pointer;
+    @media screen and (max-width:1550px) {
+      .manufacturers-info .name{
+        width: calc(100vw - 500px) !important;
+      }
+      .manufacturers-info .address{
+        width: calc(100vw - 500px) !important;
+      }
+    }
+    @media screen and (max-width:860px) {
+      .manufacturers-info .email{
+        width: calc(100vw - 500px) !important;
+      }
+    }
+    .manufacturers-info{
+      /* font-size: 16px; */
+      max-width: 1300px;
+      padding: 5px 15px 5px;
+      .disabled-input{
+        display: inline-block;
+        width: 225px;
+        height: 32px;
+        line-height: 1.5;
+        padding: 4px 7px;
+        font-size: 14px;
+        border: 1px solid #dcdee2;
+        border-radius: 4px;
+        color: #515a6e;
+        background-color: #fff;
+        background-image: none;
+        position: relative;
+        cursor: not-allowed;
+      }
+    }
+    .texture-prop{
+      .prop-add-btn{
+        display: inline-block;
+        border-radius: 4px;
+        color: #fff;
+        background: #2d8cf0;
+        padding: 0 1px;
+      }
+      .remove-btn {
+        display: inline-block;
+        font-size: 18px;
+        border: 1px solid #dcdee2;
+        border-radius: 3px;
+        margin-left: 11px;
+        padding: 0 5px;
+        height: 32px;
+        cursor: pointer;
+      }
+    }
   }
 </style>

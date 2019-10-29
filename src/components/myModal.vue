@@ -1,5 +1,5 @@
 <template>
-  <div class="my-modal-wrap" v-if="showModal">
+  <div class="my-modal-wrap" v-if="show">
     <div class="modal-header">
       <Icon type="ios-contact" />
       <span class="title">{{modalTitle}}</span>
@@ -15,29 +15,23 @@
 </template>
 <script>
 export default {
-	// props:{
-	// 	show:{
-	// 		default:true
-  //   },
-  //   modalTitle:{
-  //     default:''
-  //   }
-  // },
-  props:['show','modalTitle'],
+	props:{
+		show:{
+			default:true
+    },
+    modalTitle:{
+      default:''
+    }
+  },
+  // props:['show','modalTitle'],
   data() {
     return {
-      showModal:this.show
+      // showModal:this.show
     }
   },
   methods: {
     close(){
-      this.showModal=false
       this.$emit('update:show',false)
-    }
-  },
-  watch:{
-    show(n){
-      this.showModal=n
     }
   }
 };
@@ -54,7 +48,7 @@ export default {
   .modal-header{
     font-size: 22px;
     font-weight: 600;
-    border-bottom: 1px solid #d1d1d1;
+    border-bottom: 1px solid #cdd3dd;
     padding-bottom: 2px;
     margin-left: 25px;
     height: 53px;

@@ -1,6 +1,12 @@
 .float-right{
   float:right;
 }
+.border-1px{
+	border:1px solid #cdd3dd;
+}
 .border-2px{
 	border:2px solid #eee;
+}
+.back-white{
+  background-color: #fff;
 }

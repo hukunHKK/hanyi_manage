@@ -66,7 +66,6 @@
 <script>
 import Template1 from './mountingsTemplate/template1'
 import Template2 from './mountingsTemplate/template2'
-import { log } from 'util';
   export default {
     components:{
       template1:Template1,
