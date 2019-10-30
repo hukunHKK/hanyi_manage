@@ -5,7 +5,7 @@
     </div>
     <Form :label-width="115" inline label-colon class="border-1px" style="padding-top:12px;">
       <FormItem label="建档模板">
-        <Select v-model="templateData.type">
+        <Select v-model="templateData.type" style="width:120px;">
           <Option value="template1">模板1</Option>
           <Option value="template2">模板2</Option>
           <Option value="template3">模板3</Option>
@@ -15,7 +15,7 @@
         </Select>
       </FormItem>
       <FormItem label="配件类型">
-        <Select v-model="templateData.a">
+        <Select v-model="templateData.a" style="width:120px;">
           <!-- <Option value="penzi">盆子</Option>
           <Option value="huaban">花瓣</Option>
           <Option value="yezi">叶子</Option>-->
@@ -113,19 +113,19 @@
           <Icon type="md-add" style="font-size: 30px;" />
         </div>
       </div>
-      <check-input :data='propList'>
-      <div style="padding:0 0 10px 37px;" v-for="(item,index) in propList">
-        <Input v-model="item.key" maxlength="8" style="width: 170px" placeholder="请输入名称" />
-        <Input
-          v-model="item.value"
-          maxlength="30"
-          style="width: 296px;margin-left: 15px;"
-          placeholder="请输入描述"
-        />
-        <div class="remove-btn" @click="removeProp(index)">
-          <Icon type="md-remove" />
+      <check-input :data="propList">
+        <div style="padding:0 0 10px 37px;" v-for="(item,index) in propList">
+          <Input v-model="item.key" maxlength="8" style="width: 170px" placeholder="请输入名称" />
+          <Input
+            v-model="item.value"
+            maxlength="30"
+            style="width: 296px;margin-left: 15px;"
+            placeholder="请输入描述"
+          />
+          <div class="remove-btn" @click="removeProp(index)">
+            <Icon type="md-remove" />
+          </div>
         </div>
-      </div>
       </check-input>
       <div>
         <Form
@@ -135,7 +135,7 @@
           style="padding-top:12px;padding-right: 12px;margin-top:20px;"
         >
           <FormItem label="备注" style="width:100%;">
-            <Input type="textarea" placeholder="" />
+            <Input type="textarea" placeholder />
           </FormItem>
         </Form>
       </div>
@@ -145,38 +145,37 @@
       <span>提交审核</span>
     </div>
     <div class="border-1px audit-wrap">
-      <Form :label-width="115" label-colon inline >
+      <Form :label-width="115" label-colon inline ref="submitAudit" method="post" action="/a/b" enctype="multipart/form-data">
         <FormItem label="提交审核">
-          <Input value="请审核入库" style="width: 170px" />
+          <Input value="请审核入库" style="width: 170px" name="shenhe"/>
         </FormItem>
+        <div>
+          <FormItem label="指派到">
+            <Select v-model="templateData.l" style="width:170px;" name="zhipai">
+              <Option value="template1">张三</Option>
+              <Option value="template2">李四</Option>
+              <Option value="template3">王五</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="通知到">
+            <Input v-model="templateData.k" class="inform-input" name="tongzhi"/>
+            <Button type="primary" style="margin-left: 5px">搜索</Button>
+          </FormItem>
+        </div>
+        <div>
+          <FormItem label="上传文件">
+            <upload multiple name='wenjian'></upload>
+          </FormItem>
+        </div>
       </Form>
-      <Form :label-width="115" label-colon inline>
-        <FormItem label="指派到">
-          <Select v-model="templateData.l" style="width:170px;">
-            <Option value="template1">张三</Option>
-            <Option value="template2">李四</Option>
-            <Option value="template3">王五</Option>
-        </Select>
-        </FormItem>
-        <FormItem label="通知到">
-          <Input v-model="templateData.k" class="inform-input"/>
-          <Button type="primary" style="margin-left: 5px">搜索</Button>
-        </FormItem>
-      </Form>
-      <Form :label-width="115" label-colon inline>
-        <FormItem label="上传文件">
-          <Button type="primary" style="margin-left: 5px">选择附件</Button>
-          <span style="margin-left:25px;color:#949090;">支持扩展名：.xls .doc .docx .pdf .png .jpg...</span>
-        </FormItem>
-      </Form>
-    <!-- </div> -->
+      <!-- </div> -->
     </div>
     <!-- <div v-else> -->
     <div class="info-title">
       <span>审核入库</span>
     </div>
     <div class="border-1px audit-wrap">
-      <Form :label-width="115" label-colon inline >
+      <Form :label-width="115" label-colon inline>
         <FormItem label="建档人">
           <Input value="配件录入人-寒冬" style="width: 170px" />
         </FormItem>
@@ -192,14 +191,14 @@
           </div>
         </FormItem>
         <FormItem label="回复信息">
-          <Input type="textarea" placeholder="" style="width:calc(100% - 100px)"/>
+          <Input type="textarea" placeholder style="width:calc(100% - 100px)" />
         </FormItem>
         <FormItem label="通知到">
           <Input v-model="templateData.k" class="inform-input" />
           <Button type="primary" style="margin-left: 5px">搜索</Button>
         </FormItem>
       </Form>
-    <!-- </div> -->
+      <!-- </div> -->
     </div>
     <div style="margin: 30px;text-align: center;">
       <Button type="warning" @click="submit" style="margin-left: 5px">提交</Button>
@@ -225,7 +224,7 @@
         <div class="content">
           <Table :columns="columns1" :data="manufacturersList" height="300" :key="tableKey">
             <template slot-scope="{ row, index }" slot="action">
-              <Radio  v-model="row.checked" @on-change="checkOne(row,index)"></Radio>
+              <Radio v-model="row.checked" @on-change="checkOne(row,index)"></Radio>
             </template>
           </Table>
           <div class="page-wrap" style="text-align: center;">
@@ -246,17 +245,16 @@
   </div>
 </template>
 <script>
-
 export default {
   props: {
-    templateData: {},
+    templateData: {}
   },
   data() {
     return {
       typeManageModal: false,
       manufacturersModal: false,
       textureManageModal: false,
-      propListValid:null,
+      propListValid: null,
       value: "",
       typeList: [],
       textureList: [],
@@ -319,17 +317,18 @@ export default {
     removeProp(index) {
       this.propList.splice(index, 1);
     },
-    submit(){
-      this.close()
+    submit() {
+      console.log(this.$refs.submitAudit.$el.submit());
+      // this.close();
     },
-    storage(){
-      this.close()
+    storage() {
+      this.close();
     },
-    close(){
-      this.$store.commit('setMyModalShow',false)
+    close() {
+      this.$store.commit("setMyModalShow", false);
     },
-    checkPropList(){
-      this.propList = this.propList.filter(item=>item.key!=='')
+    checkPropList() {
+      this.propList = this.propList.filter(item => item.key !== "");
     }
   },
   computed: {
@@ -343,20 +342,18 @@ export default {
       }
     }
   },
-  watch:{
-    propList:{
-      handler(n){
-          //同为空或都有值时验证通过，同为空的情况在提交时再处理，直接清掉
-        this.propListValid = !n.some(item=>{
-          return (item.key === '')!==(item.value === '')
-        })
+  watch: {
+    propList: {
+      handler(n) {
+        //同为空或都有值时验证通过，同为空的情况在提交时再处理，直接清掉
+        this.propListValid = !n.some(item => {
+          return (item.key === "") !== (item.value === "");
+        });
       },
-      deep:true
+      deep: true
     }
   },
-  created () {
-    
-  }
+  created() {}
 };
 </script>
 <style lang="stylus" scoped>
@@ -387,8 +384,6 @@ export default {
     margin-bottom: 12px;
   }
 
-  
-
   .manufacturers-info {
     /* font-size: 16px; */
     max-width: 1300px;
@@ -404,7 +399,7 @@ export default {
       border: 1px solid #dcdee2;
       border-radius: 4px;
       color: #515a6e;
-      background-color: #fff;
+      background-color: #f5f7fa;
       background-image: none;
       position: relative;
       cursor: not-allowed;
@@ -431,10 +426,12 @@ export default {
       cursor: pointer;
     }
   }
-  .audit-wrap{
-    margin-top:20px;
+
+  .audit-wrap {
+    margin-top: 20px;
     padding: 10px 0;
   }
+
   @media screen and (min-width: 1550px) {
     .manufacturers-info .name {
       width: 710px !important;
@@ -443,8 +440,9 @@ export default {
     .manufacturers-info .address {
       width: 1060px !important;
     }
-    .audit-wrap .inform-input{
-      width:520px;
+
+    .audit-wrap .inform-input {
+      width: 520px;
     }
   }
 
@@ -457,8 +455,8 @@ export default {
       width: calc(100vw - 500px) !important;
     }
 
-    .audit-wrap .inform-input{
-      width:calc(100vw - 600px);
+    .audit-wrap .inform-input {
+      width: calc(100vw - 600px);
     }
   }
 

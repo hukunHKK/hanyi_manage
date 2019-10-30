@@ -74,7 +74,7 @@ import Template2 from './mountingsTemplate/template2'
     data() {
       return {
         templateData:{
-          type:'template1'
+          type:'template2'
         },
         formItem: {
           input: '',
@@ -90,7 +90,8 @@ import Template2 from './mountingsTemplate/template2'
         columns1: [
           {
             title: '序号',
-            type:'index'
+            type:'index',
+            width:70
           },
           {
             title: '配件类型',
