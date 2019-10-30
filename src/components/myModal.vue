@@ -1,5 +1,5 @@
 <template>
-  <div class="my-modal-wrap" v-if="show">
+  <div class="my-modal-wrap" v-if="$store.state.myModalShow">
     <div class="modal-header">
       <Icon type="ios-contact" />
       <span class="title">{{modalTitle}}</span>
@@ -16,9 +16,6 @@
 <script>
 export default {
 	props:{
-		show:{
-			default:true
-    },
     modalTitle:{
       default:''
     }
@@ -31,7 +28,7 @@ export default {
   },
   methods: {
     close(){
-      this.$emit('update:show',false)
+      this.$store.commit('setMyModalShow',false)
     }
   }
 };

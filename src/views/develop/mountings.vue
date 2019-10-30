@@ -52,13 +52,13 @@
         <Page :total="100" show-elevator />
       </div>
     </div>
-    <my-modal :show.sync="showAdd" modal-title='研发-配件建档'>
+    <my-modal modal-title='研发-配件建档'>
       <template #btn>
         <Button type="primary" style="width:85px;">暂存</Button>
       </template>
       <template #content>
-        <template2 :templateData='templateData' v-if='templateData.type === "template2"'/>
-        <template1 :templateData='templateData' v-if='templateData.type === "template1"'/>
+        <template1 :templateData='templateData' v-if='templateData.type === "template1"' />
+        <template2 :templateData='templateData' v-if='templateData.type === "template2"' />
       </template>
     </my-modal>
   </div>
@@ -73,7 +73,6 @@ import Template2 from './mountingsTemplate/template2'
     },
     data() {
       return {
-        showAdd:true,
         templateData:{
           type:'template1'
         },
@@ -279,7 +278,7 @@ import Template2 from './mountingsTemplate/template2'
     },
     methods:{
       bookbuilding(){
-        this.showAdd = true;
+        this.$store.commit('setMyModalShow', true);
         this.templateData.type = 'template1';
       }
     }

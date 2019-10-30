@@ -113,6 +113,7 @@
           <Icon type="md-add" style="font-size: 30px;" />
         </div>
       </div>
+      <check-input :data='propList'>
       <div style="padding:0 0 10px 37px;" v-for="(item,index) in propList">
         <Input v-model="item.key" maxlength="8" style="width: 170px" placeholder="请输入名称" />
         <Input
@@ -125,6 +126,7 @@
           <Icon type="md-remove" />
         </div>
       </div>
+      </check-input>
       <div>
         <Form
           :label-width="102"
@@ -138,6 +140,7 @@
         </Form>
       </div>
     </div>
+    <!-- <div v-if=""> -->
     <div class="info-title">
       <span>提交审核</span>
     </div>
@@ -166,11 +169,42 @@
           <span style="margin-left:25px;color:#949090;">支持扩展名：.xls .doc .docx .pdf .png .jpg...</span>
         </FormItem>
       </Form>
+    <!-- </div> -->
+    </div>
+    <!-- <div v-else> -->
+    <div class="info-title">
+      <span>审核入库</span>
+    </div>
+    <div class="border-1px audit-wrap">
+      <Form :label-width="115" label-colon inline >
+        <FormItem label="建档人">
+          <Input value="配件录入人-寒冬" style="width: 170px" />
+        </FormItem>
+        <FormItem label="建档时间">
+          <Input value="2019-11-11 11:11" style="width: 170px" />
+        </FormItem>
+      </Form>
+      <Form :label-width="115" label-colon>
+        <FormItem label="附件">
+          <div>
+            <span style="margin-right:20px;color:#0058cc;">fujian.txt</span>
+            <span style="margin-right:20px;color:#0058cc;">zaijin.txt</span>
+          </div>
+        </FormItem>
+        <FormItem label="回复信息">
+          <Input type="textarea" placeholder="" style="width:calc(100% - 100px)"/>
+        </FormItem>
+        <FormItem label="通知到">
+          <Input v-model="templateData.k" class="inform-input" />
+          <Button type="primary" style="margin-left: 5px">搜索</Button>
+        </FormItem>
+      </Form>
+    <!-- </div> -->
     </div>
     <div style="margin: 30px;text-align: center;">
-      <Button type="warning" style="margin-left: 5px">提交</Button>
-      <Button type="primary" style="margin-left: 5px">暂存</Button>
-      <Button type="primary" style="margin-left: 5px">返回</Button>
+      <Button type="warning" @click="submit" style="margin-left: 5px">提交</Button>
+      <Button type="primary" @click="storage" style="margin-left: 5px">暂存</Button>
+      <Button type="primary" @click="close" style="margin-left: 5px">返回</Button>
     </div>
     <Modal v-model="manufacturersModal" width="700">
       <p slot="header" style="color:#f60;text-align:center;height:22px;">
@@ -212,16 +246,17 @@
   </div>
 </template>
 <script>
-import { log } from "util";
+
 export default {
   props: {
-    templateData: {}
+    templateData: {},
   },
   data() {
     return {
       typeManageModal: false,
       manufacturersModal: false,
       textureManageModal: false,
+      propListValid:null,
       value: "",
       typeList: [],
       textureList: [],
@@ -283,6 +318,18 @@ export default {
     },
     removeProp(index) {
       this.propList.splice(index, 1);
+    },
+    submit(){
+      this.close()
+    },
+    storage(){
+      this.close()
+    },
+    close(){
+      this.$store.commit('setMyModalShow',false)
+    },
+    checkPropList(){
+      this.propList = this.propList.filter(item=>item.key!=='')
     }
   },
   computed: {
@@ -295,6 +342,20 @@ export default {
         return "含 " + this.textureList.join("、") + "；";
       }
     }
+  },
+  watch:{
+    propList:{
+      handler(n){
+          //同为空或都有值时验证通过，同为空的情况在提交时再处理，直接清掉
+        this.propListValid = !n.some(item=>{
+          return (item.key === '')!==(item.value === '')
+        })
+      },
+      deep:true
+    }
+  },
+  created () {
+    
   }
 };
 </script>

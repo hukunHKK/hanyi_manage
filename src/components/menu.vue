@@ -7,7 +7,7 @@
           <Icon :type="item.title | getType" />
           {{item.title}}
           <Icon type="ios-arrow-down"  v-if='show[index]' class="float-right"/>
-          <Icon type="ios-arrow-forward" v-else='show[index]' class="float-right"/>
+          <Icon type="ios-arrow-forward" v-else class="float-right"/>
         </div>
         <ul class="menu-2" :class="{'show-menu2':show[index]}">
           <li v-for="(it,inde) in item.children" :key="inde" @click='clickRoute(index)'>
