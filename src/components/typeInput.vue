@@ -25,8 +25,6 @@ import { log } from 'util'
       }
     },
     created(){
-      console.log(234);
-      
       this.$emit('input','')
     }
   }

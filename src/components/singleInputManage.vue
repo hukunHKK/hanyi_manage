@@ -1,8 +1,9 @@
 <template>
-  <Modal v-model.sync="modalState" :width="width" :closable="false" :mask-closable="false">
+  <div>
+  <Modal v-model.sync="modalState1" :width="width" :closable="false" :mask-closable="false">
     <p slot="header" style="color:#f60;text-align:center;height:22px;">
       <span>
-        配件材质
+        {{modalTitle}}
         <div class="add-btn" @click="addType">
           +
         </div>
@@ -11,6 +12,12 @@
       </span>
     </p>
     <div style="text-align:center">
+      <div v-if='showSelect' style="padding-left: 10px;text-align: left;">含全选项：
+        <Select v-model="selectAll" style="width:180px;">
+          <Option value="1">是</Option>
+          <Option value="0">否</Option>
+        </Select>
+      </div>
       <Form :label-width="80" inline label-colon style="padding-top:12px;">
         <FormItem :label-width="0" v-for="(item,index) in selfTypeList" style="margin-bottom:0;" :key="index">
           <div style="margin-bottom:10px;">
@@ -27,6 +34,7 @@
       <Button type="primary" size="large" long @click="submitType">确定</Button>
     </div>
   </Modal>
+  </div>
 </template>
 <script>
   export default {
@@ -38,11 +46,16 @@
         default(){
           return []
         }
-      }
+      },
+      modalTitle:String,
+      renderKey:Number
     },
     data() {
       return {
-        selfTypeList: JSON.parse(JSON.stringify(this.typeList))
+        selfTypeList: JSON.parse(JSON.stringify(this.typeList)),
+        selectAll:'0',
+        showSelect:this.$attrs.hasOwnProperty('select'),
+        modalState1:false
       }
     },
     methods: {
@@ -60,13 +73,26 @@
         this.selfTypeList.splice(index, 1)
       },
       submitType() {
+        if(this.selectAll === '1'&&this.selfTypeList[0]!=='全部'){
+          this.selfTypeList.unshift('全部')
+        }
+        //过滤掉为空的输入框
         this.selfTypeList = this.selfTypeList.filter(item => item !== '')
-        this.$emit('update:modalState', false)
         this.$emit('update:typeList', JSON.parse(JSON.stringify(this.selfTypeList)))
+        this.$emit('update:renderKey',Math.random())
+        this.close()
       },
       close() {
-        this.$emit('update:modalState', false)
+        this.modalState1 = false
+        setTimeout(() => {
+          this.$emit('update:modalState', false)
+        }, 200);
       }
+    },
+    created () {
+      this.$nextTick(function() {
+        this.modalState1 = true
+      })
     },
   }
 </script>

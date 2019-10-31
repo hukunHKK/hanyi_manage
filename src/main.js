@@ -7,6 +7,7 @@ import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 import './index.stylus';
 import global from './globalConfig';
+import './filter';
 
 import MyModal from './components/myModal.vue';
 import ImgUpload from './components/imgUpload.vue';

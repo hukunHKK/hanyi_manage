@@ -26,12 +26,8 @@
         <Button type="primary" style="margin-right: 5px" @click="typeManageModal=true">配件类型管理</Button>
       </FormItem>
     </Form>
-    <Form
-      :label-width="115"
-      label-colon
-      class="border-1px"
-      style="padding-top:12px;padding-right: 12px;margin-top:20px;"
-    >
+    <Form :label-width="115" label-colon class="border-1px"
+      style="padding-top:12px;padding-right: 12px;margin-top:20px;">
       <FormItem label="唯一编号">
         <Input style="width: 255px" placeholder="请输入" />
       </FormItem>
@@ -58,21 +54,11 @@
           <input type="text" v-model="manufacturersInfo.phone" class="disabled-input" disabled />
         </FormItem>
         <FormItem label="邮箱地址">
-          <input
-            type="text"
-            v-model="manufacturersInfo.email"
-            style="width:360px;"
-            class="disabled-input email"
-            disabled
-          />
+          <input type="text" v-model="manufacturersInfo.email" style="width:360px;" class="disabled-input email"
+            disabled />
         </FormItem>
         <FormItem label="厂商详细地址">
-          <input
-            type="text"
-            v-model="manufacturersInfo.address"
-            class="disabled-input address"
-            disabled
-          />
+          <input type="text" v-model="manufacturersInfo.address" class="disabled-input address" disabled />
         </FormItem>
       </Form>
     </div>
@@ -81,16 +67,26 @@
       <Button type="primary" @click="addTypeModal=true">新增类型</Button>
     </div>
     <div class="border-1px texture-prop" style="margin-top:20px;padding:0 0 10px;">
-      {{addTypeText}}
-      <Form
-        :label-width="115"
-        inline
-        label-colon
-        style="padding-top:12px;padding-right: 12px;margin-top:20px;"
-      >
+      <List :split='false' style="padding-left: 20px;" :key='propTypeMgKey'>
+        <ListItem v-for='(item,index) in propTypeList' style="padding-bottom:0;">
+          <Button type="primary" @click='propTypeMgBt(item,index)'>{{item.key}}管理</Button>
+          <span style="margin-left:10px;">{{item.list | listToStr}}</span>
+        </ListItem>
+      </List>
+      <div style="margin: 10px 0;">
+        <span style="margin-left:25px;color: #0058cc;vertical-align: super;">属性报价：</span>
+      </div>
+      <div class="content" style="padding:0 24px;">
+        <Table :columns="propPriceThead" :data="propPriceData">
+          <template slot-scope="{ row, index }" slot="header">
+            <Button size="small" style="margin-right: 5px" @click="show(index)">详情</Button>
+          </template>
+        </Table>
+      </div>
+      <Form :label-width="115" inline label-colon style="padding-top:12px;padding-right: 12px;margin-top:20px;">
         <FormItem label style="width:100%;" :label-width="20">
           <Button style="margin-right: 5px" type="primary" @click="textureManageModal=true">配件材质</Button>
-          {{textureStr}}
+          {{textureList | listToStr}}
         </FormItem>
       </Form>
       <div style="margin-bottom: 10px;">
@@ -102,24 +98,14 @@
       <check-input :data="propList">
         <div style="padding:0 0 10px 37px;" v-for="(item,index) in propList">
           <Input v-model="item.key" maxlength="8" style="width: 170px" placeholder="请输入名称" />
-          <Input
-            v-model="item.value"
-            maxlength="30"
-            style="width: 296px;margin-left: 15px;"
-            placeholder="请输入描述"
-          />
+          <Input v-model="item.value" maxlength="30" style="width: 296px;margin-left: 15px;" placeholder="请输入描述" />
           <div class="remove-btn" @click="removeProp(index)">
             <Icon type="md-remove" />
           </div>
         </div>
       </check-input>
       <div>
-        <Form
-          :label-width="102"
-          inline
-          label-colon
-          style="padding-top:12px;padding-right: 12px;margin-top:20px;"
-        >
+        <Form :label-width="102" inline label-colon style="padding-top:12px;padding-right: 12px;margin-top:20px;">
           <FormItem label="备注" style="width:100%;">
             <Input type="textarea" placeholder />
           </FormItem>
@@ -131,15 +117,8 @@
       <span>提交审核</span>
     </div>
     <div class="border-1px audit-wrap">
-      <Form
-        :label-width="115"
-        label-colon
-        inline
-        ref="submitAudit"
-        method="post"
-        action="/a/b"
-        enctype="multipart/form-data"
-      >
+      <Form :label-width="115" label-colon inline ref="submitAudit" method="post" action="/a/b"
+        enctype="multipart/form-data">
         <FormItem label="提交审核">
           <Input value="请审核入库" style="width: 170px" name="shenhe" />
         </FormItem>
@@ -205,10 +184,10 @@
         <span>新增类型</span>
       </p>
       <div style="text-align:center">
-        <type-input v-model="addTypeText"/>
+        <type-input v-model="addPropTypeText" />
       </div>
       <div slot="footer">
-        <Button type="primary" size="large" long @click="submitType">确定</Button>
+        <Button type="primary" size="large" long @click="addPropTypeBt">确定</Button>
       </div>
     </Modal>
     <Modal v-model="manufacturersModal" width="700">
@@ -242,243 +221,291 @@
         <Button type="primary" size="large" long @click="chooseManufacturers">确定</Button>
       </div>
     </Modal>
-    <single-input-manage
-      :modal-state.sync="textureManageModal"
-      :type-list.sync="textureList"
-      width="360"
-    ></single-input-manage>
-    <single-input-manage :modal-state.sync="typeManageModal" :type-list.sync="typeList" width="360"></single-input-manage>
+    <single-input-manage :modal-state.sync="textureManageModal" :type-list.sync="textureList" width="360"
+      v-if='textureManageModal'></single-input-manage>
+    <single-input-manage modal-title='配件类型' :modal-state.sync="typeManageModal" :type-list.sync="typeList" width="360"
+      v-if='typeManageModal'>
+    </single-input-manage>
+    <single-input-manage :modal-title='propTypeMgTitle' :modal-state.sync="propTypeManageModal"
+      v-if='propTypeManageModal' :type-list.sync="itemPropTypeList" width="360" select :render-key.sync='propTypeMgKey'>
+    </single-input-manage>
   </div>
 </template>
 <script>
-export default {
-  props: {
-    templateData: {}
-  },
-  data() {
-    return {
-      addTypeText:'',
-      addTypeModal: false,
-      typeManageModal: false,
-      manufacturersModal: false,
-      textureManageModal: false,
-      propListValid: null,
-      value: "",
-      typeList: [],
-      textureList: [],
-      propList: [],
-      tableKey: "",
-      manufacturersInfo: {},
-      columns1: [
-        {
-          title: "厂商编号",
-          key: "id"
-        },
-        {
-          title: "厂商名称",
-          key: "name"
-        },
-        {
-          title: "选择",
-          slot: "action",
-          width: 150,
-          align: "center"
-        }
-      ],
-      manufacturersList: [
-        {
-          name: "John Brown",
-          id: 181241,
-          address: "湖北",
-          contact: "刘德华"
-        },
-        {
-          name: "John ",
-          id: 181,
-          address: "陈慧娴",
-          contact: "香港"
-        },
-        {
-          name: " Brown",
-          id: 1241,
-          address: "南京",
-          contact: "彭于晏"
-        }
-      ],
-      addTypeRule:{
-        type:[
+  export default {
+    props: {
+      templateData: {}
+    },
+    data() {
+      return {
+        propPriceData: [],
+        index: null,
+        propTypeList: [],
+        propTypeMgKey: 1,
+        itemPropTypeList: [],
+        addPropTypeText: '',
+        propTypeMgTitle: '',
+        addTypeModal: false,
+        typeManageModal: false,
+        propTypeManageModal: false,
+        manufacturersModal: false,
+        textureManageModal: false,
+        propListValid: null,
+        value: "",
+        typeList: [],
+        textureList: [],
+        propList: [],
+        tableKey: "",
+        manufacturersInfo: {},
+        columns1: [{
+            title: "厂商编号",
+            key: "id"
+          },
+          {
+            title: "厂商名称",
+            key: "name"
+          },
+          {
+            title: "选择",
+            slot: "action",
+            width: 150,
+            align: "center"
+          }
+        ],
+        manufacturersList: [{
+            name: "John Brown",
+            id: 181241,
+            address: "湖北",
+            contact: "刘德华"
+          },
+          {
+            name: "John ",
+            id: 181,
+            address: "陈慧娴",
+            contact: "香港"
+          },
+          {
+            name: " Brown",
+            id: 1241,
+            address: "南京",
+            contact: "彭于晏"
+          }
+        ],
+        addTypeRule: {
+          type: [
 
+          ]
+        },
+        propPriceThead: [{
+            title: '名称/描述',
+            key: 'name'
+          },
+          {
+            title: '内部编号',
+            key: 'code'
+          },
+          {
+            title: '图片',
+            key: 'img'
+          },
+          {
+            title: '单价',
+            key: 'price'
+          },
+          {
+            renderHeader: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'alert'
+                  }
+                }),
+                h('strong', params.column.title)
+              ]);
+            }
+          },
         ]
-      }
-    };
-  },
-  methods: {
-    checkOne(row, index) {
-      this.manufacturersList.forEach(item => (item.checked = false));
-      this.manufacturersList[index].checked = true;
-      this.tempManufacturers = this.manufacturersList[index];
-      this.tableKey = Math.random();
+      };
     },
-    chooseManufacturers() {
-      this.manufacturersModal = false;
-      this.manufacturersInfo = this.tempManufacturers;
-    },
-    addProp() {
-      this.propList.push({ key: "", value: "" });
-    },
-    removeProp(index) {
-      this.propList.splice(index, 1);
-    },
-    submit() {
-      console.log(this.$refs.submitAudit.$el.submit());
-      // this.close();
-    },
-    storage() {
-      this.close();
-    },
-    close() {
-      this.$store.commit("setMyModalShow", false);
-    },
-    checkPropList() {
-      this.propList = this.propList.filter(item => item.key !== "");
-    },
-    submitType(){
-
-    }
-  },
-  computed: {
-    textureStr() {
-      if (this.textureList.length === 0) {
-        return "";
-      } else if (this.textureList.length === 1) {
-        return "含 " + this.textureList.join("、");
-      } else {
-        return "含 " + this.textureList.join("、") + "；";
-      }
-    }
-  },
-  watch: {
-    propList: {
-      handler(n) {
-        //同为空或都有值时验证通过，同为空的情况在提交时再处理，直接清掉
-        this.propListValid = !n.some(item => {
-          return (item.key === "") !== (item.value === "");
+    methods: {
+      checkOne(row, index) {
+        this.manufacturersList.forEach(item => (item.checked = false));
+        this.manufacturersList[index].checked = true;
+        this.tempManufacturers = this.manufacturersList[index];
+        this.tableKey = Math.random();
+      },
+      chooseManufacturers() {
+        this.manufacturersModal = false;
+        this.manufacturersInfo = this.tempManufacturers;
+      },
+      addProp() {
+        this.propList.push({
+          key: "",
+          value: ""
         });
       },
-      deep: true
-    }
-  },
-  created() {}
-};
+      removeProp(index) {
+        this.propList.splice(index, 1);
+      },
+      submit() {
+        console.log(this.$refs.submitAudit.$el.submit());
+        // this.close();
+      },
+      storage() {
+        this.close();
+      },
+      close() {
+        this.$store.commit("setMyModalShow", false);
+      },
+      checkPropList() {
+        this.propList = this.propList.filter(item => item.key !== "");
+      },
+      addPropTypeBt() {
+        if (this.addPropTypeText !== '') {
+          this.propTypeList.push({
+            key: this.addPropTypeText,
+            value: '',
+            list: []
+          })
+          this.addPropTypeText = ''
+          this.addTypeModal = false;
+        }
+      },
+      propTypeMgBt(item, index) {
+        this.propTypeMgTitle = item.key + '管理'
+        this.propTypeManageModal = true
+        this.itemPropTypeList = item.list
+        this.index = index
+      }
+    },
+    computed: {
+
+    },
+    watch: {
+      propList: {
+        handler(n) {
+          //同为空或都有值时验证通过，同为空的情况在提交时再处理，直接清掉
+          this.propListValid = !n.some(item => {
+            return (item.key === "") !== (item.value === "");
+          });
+        },
+        deep: true
+      },
+      itemPropTypeList(n) {
+        this.propTypeList[this.index].list = n
+      }
+    },
+    created() {}
+  };
 </script>
 <style lang="stylus" scoped>
-.template {
-  padding: 0 48px;
+  .template {
+    padding: 0 48px;
 
-  .info-title {
-    color: #0058cc;
-    border-left: 4px solid #0058cc;
-    height: 21px;
-    font-weight: bold;
-    font-size: 16px;
-    padding-left: 8px;
-    margin: 20px 0;
+    .info-title {
+      color: #0058cc;
+      border-left: 4px solid #0058cc;
+      height: 21px;
+      font-weight: bold;
+      font-size: 16px;
+      padding-left: 8px;
+      margin: 20px 0;
 
-    span {
-      vertical-align: 3px;
+      span {
+        vertical-align: 3px;
+      }
+
+      button {
+        position: relative;
+        left: 40px;
+        top: -5px;
+      }
     }
 
-    button {
-      position: relative;
-      left: 40px;
-      top: -5px;
+    .ivu-form-item {
+      margin-bottom: 12px;
+    }
+
+    .manufacturers-info {
+      /* font-size: 16px; */
+      max-width: 1300px;
+      padding: 5px 0 5px;
+
+      .disabled-input {
+        display: inline-block;
+        width: 225px;
+        height: 32px;
+        line-height: 1.5;
+        padding: 4px 7px;
+        font-size: 14px;
+        border: 1px solid #dcdee2;
+        border-radius: 4px;
+        color: #515a6e;
+        background-color: #f5f7fa;
+        background-image: none;
+        position: relative;
+        cursor: not-allowed;
+      }
+    }
+
+    .texture-prop {
+      .prop-add-btn {
+        display: inline-block;
+        border-radius: 4px;
+        color: #fff;
+        background: #2d8cf0;
+        padding: 0 1px;
+      }
+
+      .remove-btn {
+        display: inline-block;
+        font-size: 18px;
+        border: 1px solid #dcdee2;
+        border-radius: 3px;
+        margin-left: 11px;
+        padding: 0 5px;
+        height: 32px;
+        cursor: pointer;
+      }
+    }
+
+    .audit-wrap {
+      margin-top: 20px;
+      padding: 10px 0;
+    }
+
+    @media screen and (min-width: 1550px) {
+      .manufacturers-info .name {
+        width: 710px !important;
+      }
+
+      .manufacturers-info .address {
+        width: 1060px !important;
+      }
+
+      .audit-wrap .inform-input {
+        width: 520px;
+      }
+    }
+
+    @media screen and (max-width: 1550px) {
+      .manufacturers-info .name {
+        width: calc(100vw - 500px) !important;
+      }
+
+      .manufacturers-info .address {
+        width: calc(100vw - 500px) !important;
+      }
+
+      .audit-wrap .inform-input {
+        width: calc(100vw - 600px);
+      }
+    }
+
+    @media screen and (max-width: 860px) {
+      .manufacturers-info .email {
+        width: calc(100vw - 500px) !important;
+      }
     }
   }
-
-  .ivu-form-item {
-    margin-bottom: 12px;
-  }
-
-  .manufacturers-info {
-    /* font-size: 16px; */
-    max-width: 1300px;
-    padding: 5px 0 5px;
-
-    .disabled-input {
-      display: inline-block;
-      width: 225px;
-      height: 32px;
-      line-height: 1.5;
-      padding: 4px 7px;
-      font-size: 14px;
-      border: 1px solid #dcdee2;
-      border-radius: 4px;
-      color: #515a6e;
-      background-color: #f5f7fa;
-      background-image: none;
-      position: relative;
-      cursor: not-allowed;
-    }
-  }
-
-  .texture-prop {
-    .prop-add-btn {
-      display: inline-block;
-      border-radius: 4px;
-      color: #fff;
-      background: #2d8cf0;
-      padding: 0 1px;
-    }
-
-    .remove-btn {
-      display: inline-block;
-      font-size: 18px;
-      border: 1px solid #dcdee2;
-      border-radius: 3px;
-      margin-left: 11px;
-      padding: 0 5px;
-      height: 32px;
-      cursor: pointer;
-    }
-  }
-
-  .audit-wrap {
-    margin-top: 20px;
-    padding: 10px 0;
-  }
-
-  @media screen and (min-width: 1550px) {
-    .manufacturers-info .name {
-      width: 710px !important;
-    }
-
-    .manufacturers-info .address {
-      width: 1060px !important;
-    }
-
-    .audit-wrap .inform-input {
-      width: 520px;
-    }
-  }
-
-  @media screen and (max-width: 1550px) {
-    .manufacturers-info .name {
-      width: calc(100vw - 500px) !important;
-    }
-
-    .manufacturers-info .address {
-      width: calc(100vw - 500px) !important;
-    }
-
-    .audit-wrap .inform-input {
-      width: calc(100vw - 600px);
-    }
-  }
-
-  @media screen and (max-width: 860px) {
-    .manufacturers-info .email {
-      width: calc(100vw - 500px) !important;
-    }
-  }
-}
 </style>
