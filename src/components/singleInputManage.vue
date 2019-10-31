@@ -23,9 +23,7 @@
           <div style="margin-bottom:10px;">
             <input type="text" :value="item" @input="change($event,index)" class="ivu-input" style="width: 255px"
               maxlength="20" required placeholder="只能输入中文英文数字，长度限制1-20">
-            <div class="remove-btn" @click="removeType(index)">
-              <Icon type="md-remove" />
-            </div>
+            <remove-btn  @click.native="removeType(index)"/>
           </div>
         </FormItem>
       </Form>
@@ -48,7 +46,6 @@
         }
       },
       modalTitle:String,
-      renderKey:Number
     },
     data() {
       return {
@@ -73,23 +70,40 @@
         this.selfTypeList.splice(index, 1)
       },
       submitType() {
-        if(this.selectAll === '1'&&this.selfTypeList[0]!=='全部'){
-          this.selfTypeList.unshift('全部')
-        }
+        let canSubmit = true;
         //过滤掉为空的输入框
-        this.selfTypeList = this.selfTypeList.filter(item => item !== '')
-        this.$emit('update:typeList', JSON.parse(JSON.stringify(this.selfTypeList)))
-        this.$emit('update:renderKey',Math.random())
+        this.selfTypeList = this.selfTypeList.filter(item => {
+          if(item === '全部'&&this.showSelect){
+            canSubmit = false
+            this.$Message.error({
+                background: true,
+                content: '全部项请在下拉框中选择'
+            })
+           return false 
+          }
+          return item !== ''
+        })
+        if(!canSubmit) return
+        setTimeout(()=>{
+          if(this.selectAll === '1'&&this.selfTypeList[0]!=='全部'){
+            this.selfTypeList.unshift('全部')
+          }
+          this.$emit('update:typeList', JSON.parse(JSON.stringify(this.selfTypeList)))
+        },200)//200ms防止Modal在关闭的瞬间能看到里面多了个全选项
         this.close()
       },
       close() {
         this.modalState1 = false
         setTimeout(() => {
           this.$emit('update:modalState', false)
-        }, 200);
+        }, 200);//200ms防止Modal关闭动画完成之前该组件销毁，导致没动画效果
       }
     },
     created () {
+      if(this.showSelect&&this.selfTypeList[0]==='全部'){
+        this.selfTypeList.shift()
+        this.selectAll = '1'
+      }
       this.$nextTick(function() {
         this.modalState1 = true
       })
@@ -105,17 +119,6 @@
     margin-left: 11px;
     padding: 0 5px;
     height: 22px;
-    cursor: pointer;
-  }
-
-  .remove-btn {
-    display: inline-block;
-    font-size: 18px;
-    border: 1px solid #dcdee2;
-    border-radius: 3px;
-    margin-left: 11px;
-    padding: 0 5px;
-    height: 32px;
     cursor: pointer;
   }
 </style>

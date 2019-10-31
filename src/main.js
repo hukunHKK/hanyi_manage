@@ -8,6 +8,8 @@ import 'view-design/dist/styles/iview.css';
 import './index.stylus';
 import global from './globalConfig';
 import './filter';
+import deepClone from './common'
+
 
 import MyModal from './components/myModal.vue';
 import ImgUpload from './components/imgUpload.vue';
@@ -15,6 +17,8 @@ import SingleInputManage from './components/singleInputManage.vue';
 import CheckInput from './components/checkInput.vue';
 import Upload from './components/upload.vue';
 import TypeInput from './components/typeInput.vue';
+import RemoveBtn from './components/removeBtn.vue';
+import AddBtn from './components/addBtn.vue';
 
 Vue.config.productionTip = false
 Vue.use(ViewUI);
@@ -24,7 +28,11 @@ Vue.component('single-input-manage', SingleInputManage);
 Vue.component('check-input', CheckInput);
 Vue.component('upload', Upload);
 Vue.component('type-input', TypeInput);
+Vue.component('remove-btn', RemoveBtn);
+Vue.component('add-btn', AddBtn);
+
 Vue.prototype.$global = global;
+Vue.prototype.$deepClone = deepClone;
 
 
 new Vue({

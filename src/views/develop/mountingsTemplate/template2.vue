@@ -62,12 +62,13 @@
         </FormItem>
       </Form>
     </div>
+    <!-- 配件属性 -->
     <div class="info-title">
       <span>配件属性</span>
       <Button type="primary" @click="addTypeModal=true">新增类型</Button>
     </div>
     <div class="border-1px texture-prop" style="margin-top:20px;padding:0 0 10px;">
-      <List :split='false' style="padding-left: 20px;" :key='propTypeMgKey'>
+      <List :split='false' style="padding-left: 20px;">
         <ListItem v-for='(item,index) in propTypeList' style="padding-bottom:0;">
           <Button type="primary" @click='propTypeMgBt(item,index)'>{{item.key}}管理</Button>
           <span style="margin-left:10px;">{{item.list | listToStr}}</span>
@@ -76,10 +77,28 @@
       <div style="margin: 10px 0;">
         <span style="margin-left:25px;color: #0058cc;vertical-align: super;">属性报价：</span>
       </div>
-      <div class="content" style="padding:0 24px;">
-        <Table :columns="propPriceThead" :data="propPriceData">
-          <template slot-scope="{ row, index }" slot="header">
-            <Button size="small" style="margin-right: 5px" @click="show(index)">详情</Button>
+      <div class="content" style="padding:0 24px;">{{propPriceData}}
+        <Table :columns="propPriceThead" :data="propPriceData" style="overflow:visible;">
+          <template slot-scope="{ row, index }" slot="name">
+            <Input type="text" v-model="propPriceData[index].name"/>
+          </template>
+          <template slot-scope="{ row, index }" slot="code">
+            <Input type="text" v-model="row.code"/>
+          </template>
+          <template slot-scope="{ row, index }" slot="img">
+            <!-- <Input type="file" v-model="row.img"/> -->
+          </template>
+          <template slot-scope="{ row, index }" :slot="item.title" v-for="item in tablePropTheadList">
+            <Select v-model="templateData[item.title]" style="width:120px;">
+              <Option :value="i" v-for="i in item.selectList">{{i}}</Option>
+            </Select>
+          </template>
+          <template slot-scope="{ row, index }" slot="price">
+            <Input type="text" v-model="row.price"/>
+          </template>
+          <template slot-scope="{ row, index }" slot="action">
+            <add-btn color='#1296db' border-color='#1296db'/>
+            <remove-btn color='#1296db' border-color='#1296db' style="padding:1px 4px;"/>
           </template>
         </Table>
       </div>
@@ -227,21 +246,22 @@
       v-if='typeManageModal'>
     </single-input-manage>
     <single-input-manage :modal-title='propTypeMgTitle' :modal-state.sync="propTypeManageModal"
-      v-if='propTypeManageModal' :type-list.sync="itemPropTypeList" width="360" select :render-key.sync='propTypeMgKey'>
+      v-if='propTypeManageModal' :type-list.sync="itemPropTypeList" width="360" select>
     </single-input-manage>
   </div>
 </template>
 <script>
+import { log } from 'util';
   export default {
     props: {
       templateData: {}
     },
     data() {
       return {
-        propPriceData: [],
+        tablePropTheadList:[],
+        propPriceData: [{name:11}],
         index: null,
         propTypeList: [],
-        propTypeMgKey: 1,
         itemPropTypeList: [],
         addPropTypeText: '',
         propTypeMgTitle: '',
@@ -296,35 +316,51 @@
 
           ]
         },
-        propPriceThead: [{
+        initPropPriceThead: [{
             title: '名称/描述',
-            key: 'name'
+            slot: 'name',
+            align: 'center'
           },
           {
             title: '内部编号',
-            key: 'code'
+            slot: 'code',
+            align: 'center'
           },
           {
             title: '图片',
-            key: 'img'
+            slot: 'img',
+            align: 'center'
           },
           {
             title: '单价',
-            key: 'price'
+            slot: 'price',
+            align: 'center'
           },
           {
+            slot:'action',
             renderHeader: (h, params) => {
-              return h('div', [
-                h('Icon', {
-                  props: {
-                    type: 'alert'
+              return h('Button',{
+                style:{
+                  padding:'4px'
+                },
+                on:{
+                  click:()=>{
+                    
                   }
-                }),
-                h('strong', params.column.title)
-              ]);
-            }
+                }
+              },[h('Icon',{
+                attrs:{
+                  type:'md-add'
+                },
+                style:{
+                  fontSize:'20px'
+                }
+              },'')]);
+            },
+            align: 'center'
           },
-        ]
+        ],
+        propPriceThead: [],
       };
     },
     methods: {
@@ -393,9 +429,26 @@
       },
       itemPropTypeList(n) {
         this.propTypeList[this.index].list = n
+      },
+      propTypeList:{
+        handler(n){
+          this.propPriceThead = this.$deepClone(this.initPropPriceThead)
+          n.forEach(item=>{
+            this.propPriceThead.splice(3,0,{
+              title:item.key,
+              slot:item.key,
+              align:'center',
+              width:140
+            })
+            this.tablePropTheadList.push({title:item.key,selectList:item.list})
+          })
+        },
+        deep:true
       }
     },
-    created() {}
+    created() {
+      this.propPriceThead = this.$deepClone(this.initPropPriceThead)
+    }
   };
 </script>
 <style lang="stylus" scoped>
