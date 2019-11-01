@@ -3,7 +3,7 @@
     <Button type="primary" @click="clickFileInput">{{text}}</Button>
     <span v-if='fileName' style="margin-left:25px;color:#0058cc;">{{fileName}}</span>
     <span v-else style="margin-left:25px;color:#949090;">支持扩展名：{{expandedName}}...</span>
-    <input type="file" :name="name" hidden  multiple ref="input" @change='fileChange'>
+    <input type="file" :name="name" hidden  :multiple='multiple' ref="input" @change='fileChange'>
   </div>
 </template>
 <script>

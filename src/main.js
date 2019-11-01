@@ -19,6 +19,7 @@ import Upload from './components/upload.vue';
 import TypeInput from './components/typeInput.vue';
 import RemoveBtn from './components/removeBtn.vue';
 import AddBtn from './components/addBtn.vue';
+import TdUpload from './components/tdUpload.vue';
 
 Vue.config.productionTip = false
 Vue.use(ViewUI);
@@ -30,6 +31,7 @@ Vue.component('upload', Upload);
 Vue.component('type-input', TypeInput);
 Vue.component('remove-btn', RemoveBtn);
 Vue.component('add-btn', AddBtn);
+Vue.component('td-upload', TdUpload);
 
 Vue.prototype.$global = global;
 Vue.prototype.$deepClone = deepClone;

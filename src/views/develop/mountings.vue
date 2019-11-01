@@ -54,11 +54,11 @@
     </div>
     <my-modal modal-title='研发-配件建档'>
       <template #btn>
-        <Button type="primary" style="width:85px;">暂存</Button>
+        <Button type="primary" style="width:85px;" @click="storage">暂存</Button>
       </template>
       <template #content>
-        <template1 :templateData='templateData' v-if='templateData.type === "template1"' />
-        <template2 :templateData='templateData' v-if='templateData.type === "template2"' />
+        <template1 :templateData='templateData' v-if='templateData.type === "template1"' ref="template1" />
+        <template2 :templateData='templateData' v-if='templateData.type === "template2"' ref="template2" />
       </template>
     </my-modal>
   </div>
@@ -124,7 +124,8 @@ import Template2 from './mountingsTemplate/template2'
             align: 'center'
           }
         ],
-        data1: [{
+        data1: [
+          {
             name: 'John Brown',
             age: 18,
             address: 'New York No. 1 Lake Park',
@@ -281,6 +282,9 @@ import Template2 from './mountingsTemplate/template2'
       bookbuilding(){
         this.$store.commit('setMyModalShow', true);
         this.templateData.type = 'template1';
+      },
+      storage(){
+        this.$refs[this.templateData.type].storage()
       }
     }
   }

@@ -5,7 +5,7 @@
     </div>
     <Form :label-width="115" inline label-colon class="border-1px" style="padding-top:12px;">
       <FormItem label="建档模板">
-        <Select v-model="templateData.type" style="width:120px;">
+        <Select v-model="templateData.type" style="width:120px;" :disabled='isAudit'>
           <Option value="template1">模板1</Option>
           <Option value="template2">模板2</Option>
           <Option value="template3">模板3</Option>
@@ -15,7 +15,7 @@
         </Select>
       </FormItem>
       <FormItem label="配件类型">
-        <Select v-model="templateData.a" style="width:120px;">
+        <Select v-model="templateData.a" style="width:120px;" :disabled='isAudit'>
           <!-- <Option value="penzi">盆子</Option>
           <Option value="huaban">花瓣</Option>
           <Option value="yezi">叶子</Option>-->
@@ -23,16 +23,17 @@
         </Select>
       </FormItem>
       <FormItem :label-width="0">
-        <Button type="primary" style="margin-right: 5px" @click="typeManageModal=true">配件类型管理</Button>
+        <Button :disabled='isAudit' type="primary" style="margin-right: 5px"
+          @click="typeManageModal=true">配件类型管理</Button>
       </FormItem>
     </Form>
     <Form :label-width="115" label-colon class="border-1px"
       style="padding-top:12px;padding-right: 12px;margin-top:20px;">
       <FormItem label="唯一编号">
-        <Input style="width: 255px" placeholder="请输入" />
+        <Input style="width: 255px" placeholder="请输入" :disabled='isAudit' />
       </FormItem>
       <FormItem label="同款编号">
-        <Input placeholder="可设定同款编号，多个编号以、隔开" />
+        <Input placeholder="可设定同款编号，多个编号以、隔开" :disabled='isAudit' />
       </FormItem>
     </Form>
     <div class="info-title">
@@ -65,7 +66,7 @@
     <!-- 配件属性 -->
     <div class="info-title">
       <span>配件属性</span>
-      <Button type="primary" @click="addTypeModal=true">新增类型</Button>
+      <Button :disabled='isAudit' type="primary" @click="addTypeModal=true">新增类型</Button>
     </div>
     <div class="border-1px texture-prop" style="margin-top:20px;padding:0 0 10px;">
       <List :split='false' style="padding-left: 20px;">
@@ -77,47 +78,53 @@
       <div style="margin: 10px 0;">
         <span style="margin-left:25px;color: #0058cc;vertical-align: super;">属性报价：</span>
       </div>
-      <div class="content" style="padding:0 24px;">{{propPriceData}}
+      <div class="content" style="padding:0 24px;">
+        <form  ref="propTableForm">
         <Table :columns="propPriceThead" :data="propPriceData" style="overflow:visible;">
           <template slot-scope="{ row, index }" slot="name">
-            <Input type="text" v-model="propPriceData[index].name"/>
+            <Input type="text" v-model="propPriceData[index].name" :disabled='isAudit' />
           </template>
           <template slot-scope="{ row, index }" slot="code">
-            <Input type="text" v-model="row.code"/>
+            <Input type="text" v-model="propPriceData[index].code" :disabled='isAudit' />
           </template>
           <template slot-scope="{ row, index }" slot="img">
-            <!-- <Input type="file" v-model="row.img"/> -->
+            <td-upload :name='propPriceData[index].code' :disabled='isAudit'></td-upload>
           </template>
           <template slot-scope="{ row, index }" :slot="item.title" v-for="item in tablePropTheadList">
-            <Select v-model="templateData[item.title]" style="width:120px;">
+            <Select v-model="propPriceData[index].property[item.title]" :disabled='isAudit' style="width:120px;">
               <Option :value="i" v-for="i in item.selectList">{{i}}</Option>
             </Select>
           </template>
           <template slot-scope="{ row, index }" slot="price">
-            <Input type="text" v-model="row.price"/>
+            <!-- <Input type="text" v-model="propPriceData[index].price" /> -->
+            <type-input number v-model="propPriceData[index].price" :disabled='isAudit' />
           </template>
           <template slot-scope="{ row, index }" slot="action">
-            <add-btn color='#1296db' border-color='#1296db'/>
-            <remove-btn color='#1296db' border-color='#1296db' style="padding:1px 4px;"/>
+            <!-- <add-btn color='#1296db' border-color='#1296db'/> -->
+            <remove-btn :disabled='isAudit' color='#1296db' @click.native='deletePriceItem(index)'
+              border-color='#1296db' style="padding:1px 4px;" />
           </template>
         </Table>
+        </form>
       </div>
       <Form :label-width="115" inline label-colon style="padding-top:12px;padding-right: 12px;margin-top:20px;">
         <FormItem label style="width:100%;" :label-width="20">
-          <Button style="margin-right: 5px" type="primary" @click="textureManageModal=true">配件材质</Button>
+          <Button style="margin-right: 5px" type="primary" @click="textureManageModal=true"
+            :disabled='isAudit'>配件材质</Button>
           {{textureList | listToStr}}
         </FormItem>
       </Form>
       <div style="margin-bottom: 10px;">
         <span style="margin-left:25px;color: #0058cc;vertical-align: super;">配件属性：</span>
-        <div @click="addProp" class="prop-add-btn">
+        <div @click="addProp" class="prop-add-btn" :disabled='isAudit'>
           <Icon type="md-add" style="font-size: 30px;" />
         </div>
       </div>
       <check-input :data="propList">
         <div style="padding:0 0 10px 37px;" v-for="(item,index) in propList">
-          <Input v-model="item.key" maxlength="8" style="width: 170px" placeholder="请输入名称" />
-          <Input v-model="item.value" maxlength="30" style="width: 296px;margin-left: 15px;" placeholder="请输入描述" />
+          <Input v-model="item.key" maxlength="8" style="width: 170px" :disabled='isAudit' placeholder="请输入名称" />
+          <Input v-model="item.value" maxlength="30" :disabled='isAudit' style="width: 296px;margin-left: 15px;"
+            placeholder="请输入描述" />
           <div class="remove-btn" @click="removeProp(index)">
             <Icon type="md-remove" />
           </div>
@@ -126,7 +133,7 @@
       <div>
         <Form :label-width="102" inline label-colon style="padding-top:12px;padding-right: 12px;margin-top:20px;">
           <FormItem label="备注" style="width:100%;">
-            <Input type="textarea" placeholder />
+            <Input type="textarea" placeholder :disabled='isAudit' />
           </FormItem>
         </Form>
       </div>
@@ -254,12 +261,15 @@
 import { log } from 'util';
   export default {
     props: {
-      templateData: {}
+      templateData: {},
+      isAudit:{
+        default:true
+      }
     },
     data() {
       return {
         tablePropTheadList:[],
-        propPriceData: [{name:11}],
+        propPriceData: [{property:{},name:'',code:'',price:''}],
         index: null,
         propTypeList: [],
         itemPropTypeList: [],
@@ -345,7 +355,7 @@ import { log } from 'util';
                 },
                 on:{
                   click:()=>{
-                    
+                    this.propPriceData.push({property:{},name:'',code:'',price:''})
                   }
                 }
               },[h('Icon',{
@@ -384,11 +394,15 @@ import { log } from 'util';
         this.propList.splice(index, 1);
       },
       submit() {
-        console.log(this.$refs.submitAudit.$el.submit());
+        // console.log(this.$refs.submitAudit.$el.submit());
         // this.close();
       },
       storage() {
-        this.close();
+        let formdata = new FormData(this.$refs.propTableForm)
+        console.log(formdata);
+        this.$axios.post('/a/k',formdata)
+        this.verifyPropPriceData()
+        // this.close();
       },
       close() {
         this.$store.commit("setMyModalShow", false);
@@ -398,6 +412,7 @@ import { log } from 'util';
       },
       addPropTypeBt() {
         if (this.addPropTypeText !== '') {
+
           this.propTypeList.push({
             key: this.addPropTypeText,
             value: '',
@@ -412,6 +427,26 @@ import { log } from 'util';
         this.propTypeManageModal = true
         this.itemPropTypeList = item.list
         this.index = index
+      },
+      deletePriceItem(index){
+        this.propPriceData.splice(index,1)
+      },
+      verifyPropPriceData(){
+        return this.propPriceData.some(item=>{
+          for (let key in item) {
+            if(key!=='property'){
+              if(item[key] == ''){
+                return true
+              }
+            }else{
+              for(let k in item[key]){
+                if(item[key][k] == ''){
+                  return true
+                }
+              }
+            }
+          }
+        })
       }
     },
     computed: {
@@ -432,22 +467,43 @@ import { log } from 'util';
       },
       propTypeList:{
         handler(n){
+          //每次属性有变动时初始化表头数据
+          //因为有renderHeader，所以需要用深度克隆，JSON无效
           this.propPriceThead = this.$deepClone(this.initPropPriceThead)
+          this.tablePropTheadList = []
           n.forEach(item=>{
+            //渲染表头的数据
             this.propPriceThead.splice(3,0,{
               title:item.key,
               slot:item.key,
               align:'center',
               width:140
             })
+            //渲染属性部分的表头数据
             this.tablePropTheadList.push({title:item.key,selectList:item.list})
+            //列表数据，防止添加属性后不选择属性直接提交，检测不到下拉框为空
+            this.propPriceData.forEach(it=>{
+              if(!it.property.hasOwnProperty(item.key)){
+                it[item.key] = ''
+              }
+            })
           })
+          console.log(this.tablePropTheadList);
+          
         },
         deep:true
       }
     },
     created() {
       this.propPriceThead = this.$deepClone(this.initPropPriceThead)
+      console.log(this.$axios);
+      let data = new FormData()
+      data.append('name','hh')
+      console.log(data);
+      
+      this.$axios.post('/a/b',{
+        data
+      })
     }
   };
 </script>
