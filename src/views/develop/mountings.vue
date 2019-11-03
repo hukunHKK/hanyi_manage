@@ -38,7 +38,7 @@
       </Form>
     </div>
     <div class="content">
-      <Table :columns="columns1" :data="data1" class="table-height">
+      <Table :columns="columns" :data="mountingsList" class="table-height">
         <template slot-scope="{ row, index }" slot="action">
           <Button size="small" style="margin-right: 5px" @click="show(index)">详情</Button>
         </template>
@@ -46,8 +46,8 @@
       <div class="page-wrap">
         <div style='float: left;'>
           <Button @click="handleSubmit('formValidate')">草稿列表</Button>
-          <Button @click="handleSubmit('formValidate')">配件材质管理</Button>
-          <Button @click="handleSubmit('formValidate')">配件类型管理</Button>
+          <Button @click="textureManageBt()">配件材质管理</Button>
+          <Button @click="typeManageBt()">配件类型管理</Button>
         </div>
         <Page :total="100" show-elevator />
       </div>
@@ -62,6 +62,19 @@
         <template3 :templateData='templateData' v-if='templateData.type === "template3"' ref="template3" />
       </template>
     </my-modal>
+    <single-input-manage
+      modal-title="配件材质管理"
+      :modal-state.sync="textureManageModal"
+      dispatch='getTextureList'
+      v-if="textureManageModal"
+      width="360"
+    ></single-input-manage>
+    <single-input-manage 
+      modal-title="配件类型管理" 
+      :modal-state.sync="typeManageModal"
+      v-if="typeManageModal"
+      :type-list.sync="typeList" width="360">
+    </single-input-manage>
   </div>
 </template>
 <script>
@@ -76,8 +89,12 @@ import Template3 from './mountingsTemplate/template3'
     },
     data() {
       return {
+        textureManageModal:false,
+        typeManageModal:false,
+        textureList:this.$store.state.mountings.textureList,
+        typeList:this.$store.state.mountings.typeList,
         templateData:{
-          type:'template3'
+          type:'template1'
         },
         formItem: {
           input: '',
@@ -90,7 +107,7 @@ import Template3 from './mountingsTemplate/template3'
           slider: [20, 50],
           textarea: ''
         },
-        columns1: [
+        columns: [
           {
             title: '序号',
             type:'index',
@@ -137,7 +154,7 @@ import Template3 from './mountingsTemplate/template3'
             align: 'center'
           }
         ],
-        data1: [
+        mountingsList: [
           {
             name: 'John Brown',
             age: 18,
@@ -235,73 +252,7 @@ import Template3 from './mountingsTemplate/template3'
             address: 'Ottawa No. 2 Lake Park',
             date: '2016-10-04',
             state:'已驳回'
-          },
-          // {
-          //   name: 'Jon Snow',
-          //   age: 26,
-          //   address: 'Ottawa No. 2 Lake Park',
-          //   date: '2016-10-04'
-          // },
-          // {
-          //   name: 'Jon Snow',
-          //   age: 26,
-          //   address: 'Ottawa No. 2 Lake Park',
-          //   date: '2016-10-04'
-          // },
-          // {
-          //   name: 'Jon Snow',
-          //   age: 26,
-          //   address: 'Ottawa No. 2 Lake Park',
-          //   date: '2016-10-04'
-          // },
-          // {
-          //   name: 'Jon Snow',
-          //   age: 26,
-          //   address: 'Ottawa No. 2 Lake Park',
-          //   date: '2016-10-04'
-          // },
-          // {
-          //   name: 'Jon Snow',
-          //   age: 26,
-          //   address: 'Ottawa No. 2 Lake Park',
-          //   date: '2016-10-04'
-          // },
-          // {
-          //   name: 'Jon Snow',
-          //   age: 26,
-          //   address: 'Ottawa No. 2 Lake Park',
-          //   date: '2016-10-04'
-          // },
-          // {
-          //   name: 'Jon Snow',
-          //   age: 26,
-          //   address: 'Ottawa No. 2 Lake Park',
-          //   date: '2016-10-04'
-          // },
-          // {
-          //   name: 'Jon Snow',
-          //   age: 26,
-          //   address: 'Ottawa No. 2 Lake Park',
-          //   date: '2016-10-04'
-          // },
-          // {
-          //   name: 'Jon Snow',
-          //   age: 26,
-          //   address: 'Ottawa No. 2 Lake Park',
-          //   date: '2016-10-04'
-          // },
-          // {
-          //   name: 'Jon Snow',
-          //   age: 26,
-          //   address: 'Ottawa No. 2 Lake Park',
-          //   date: '2016-10-04'
-          // },
-          // {
-          //   name: 'Jon Snow',
-          //   age: 26,
-          //   address: 'Ottawa No. 2 Lake Park',
-          //   date: '2016-10-04'
-          // },
+          }
         ]
       }
     },
@@ -312,7 +263,26 @@ import Template3 from './mountingsTemplate/template3'
       },
       storage(){
         this.$refs[this.templateData.type].storage()
+      },
+      textureManageBt(){
+        // console.log(this.$store.dispatch('getTextureList'))
+        // return
+        this.textureManageModal = true
+      },
+      typeManageBt(){
+        this.typeManageModal = true
       }
+    },
+    created(){
+      return
+      // 查询配件类型
+      this.$axios.get('/a').then(res=>{
+
+      })
+      // 查询配件材质
+      this.$axios.get('/a').then(res=>{
+        
+      })
     }
   }
 </script>

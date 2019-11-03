@@ -78,7 +78,7 @@
       <div style="margin: 10px 0;">
         <span style="margin-left:25px;color: #0058cc;vertical-align: super;">属性报价：</span>
       </div>
-      <div class="content" style="padding:0 24px;">
+      <div class="content" style="padding:0 24px;">{{propPriceData}}
         <form  ref="propTableForm">
         <Table :columns="propPriceThead" :data="propPriceData" style="overflow:visible;">
           <template slot-scope="{ row, index }" slot="name">

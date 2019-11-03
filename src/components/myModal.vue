@@ -36,7 +36,7 @@ export default {
 <style lang="stylus">
 .my-modal-wrap{
   position: absolute;
-	top: 63 px;
+	top: 80px;
 	bottom: 0;
 	left: 200px;
 	right:0;

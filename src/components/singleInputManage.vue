@@ -46,12 +46,15 @@
         }
       },
       modalTitle:String,
+      dispatch:{
+        default:false
+      }
     },
     data() {
       return {
         selfTypeList: JSON.parse(JSON.stringify(this.typeList)),
         selectAll:'0',
-        showSelect:this.$attrs.hasOwnProperty('select'),
+        showSelect:this.$attrs.hasOwnProperty('select'),//是否显示全选框
         modalState1:false
       }
     },
@@ -88,7 +91,12 @@
           if(this.selectAll === '1'&&this.selfTypeList[0]!=='全部'){
             this.selfTypeList.unshift('全部')
           }
-          this.$emit('update:typeList', JSON.parse(JSON.stringify(this.selfTypeList)))
+          // dispatch有值则需要提交请求，更新store
+          if(this.dispatch){
+            this.$store.dispatch(this.dispatch,this.selfTypeList)
+          }else{
+            this.$emit('update:typeList', JSON.parse(JSON.stringify(this.selfTypeList)))
+          }
         },200)//200ms防止Modal在关闭的瞬间能看到里面多了个全选项
         this.close()
       },
@@ -100,6 +108,7 @@
       }
     },
     created () {
+     
       if(this.showSelect&&this.selfTypeList[0]==='全部'){
         this.selfTypeList.shift()
         this.selectAll = '1'

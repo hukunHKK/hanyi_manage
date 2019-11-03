@@ -105,7 +105,12 @@
         </FormItem>
         <FormItem label style="width:100%;" :label-width="20">
           <Button style="margin-right: 5px" type="primary" @click="textureManageModal=true">配件材质</Button>
-          {{textureStr}}
+          <Select v-model="textureList" style="width:220px;margin-right:10px;" multiple :max-tag-count='2'>
+            <Option value="1">陶瓷</Option>
+            <Option value="2">布料</Option>
+            <Option value="3">沙子</Option>
+        </Select>
+          <span>{{textureList | listToStr}}</span>
         </FormItem>
       </Form>
       <div style="margin-bottom: 10px;">
@@ -238,14 +243,14 @@
       </div>
     </Modal>
     <single-input-manage
-      modal-title="配件材质"
+      modal-title="配件材质管理"
       :modal-state.sync="textureManageModal"
       :type-list.sync="textureList"
       v-if="textureManageModal"
       width="360"
     ></single-input-manage>
     <single-input-manage 
-      modal-title="配件类型" 
+      modal-title="配件类型管理" 
       :modal-state.sync="typeManageModal"
       v-if="typeManageModal"
       :type-list.sync="typeList" width="360">
@@ -340,15 +345,7 @@ export default {
     }
   },
   computed: {
-    textureStr() {
-      if (this.textureList.length === 0) {
-        return "";
-      } else if (this.textureList.length === 1) {
-        return "含 " + this.textureList.join("、");
-      } else {
-        return "含 " + this.textureList.join("、") + "；";
-      }
-    }
+    
   },
   watch: {
     propList: {
@@ -361,7 +358,14 @@ export default {
       deep: true
     }
   },
-  created() {}
+  created() {
+    this.textureList = [1,2,3]
+    return 
+    //查询textureList
+    // this.$axios.get('/a').then(res=>{
+
+    // })
+  }
 };
 </script>
 <style lang="stylus" scoped>
@@ -471,6 +475,12 @@ export default {
   @media screen and (max-width: 860px) {
     .manufacturers-info .email {
       width: calc(100vw - 500px) !important;
+    }
+  }
+  .select-multiple{
+    .ivu-select-selection{
+      height:32px;
+      overflow:hidden;
     }
   }
 }
