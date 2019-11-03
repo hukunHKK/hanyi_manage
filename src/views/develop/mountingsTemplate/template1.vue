@@ -83,6 +83,7 @@
         </FormItem>
       </Form>
     </div>
+    <!-- 配件属性 -->
     <div class="info-title">
       <span>配件属性</span>
     </div>
