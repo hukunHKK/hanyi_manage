@@ -59,6 +59,7 @@
       <template #content>
         <template1 :templateData='templateData' v-if='templateData.type === "template1"' ref="template1" />
         <template2 :templateData='templateData' v-if='templateData.type === "template2"' ref="template2" />
+        <template3 :templateData='templateData' v-if='templateData.type === "template3"' ref="template3" />
       </template>
     </my-modal>
   </div>
@@ -66,15 +67,17 @@
 <script>
 import Template1 from './mountingsTemplate/template1'
 import Template2 from './mountingsTemplate/template2'
+import Template3 from './mountingsTemplate/template3'
   export default {
     components:{
       template1:Template1,
-      template2:Template2
+      template2:Template2,
+      template3:Template3,
     },
     data() {
       return {
         templateData:{
-          type:'template2'
+          type:'template3'
         },
         formItem: {
           input: '',
@@ -91,15 +94,18 @@ import Template2 from './mountingsTemplate/template2'
           {
             title: '序号',
             type:'index',
-            width:70
+            width:70,
+            align:'center'
           },
           {
             title: '配件类型',
-            key: 'name'
+            key: 'name',
+            width:120
           },
           {
             title: '配件编号',
-            key: 'age'
+            key: 'age',
+            width:120
           },
           {
             title: '图片',
@@ -107,15 +113,22 @@ import Template2 from './mountingsTemplate/template2'
           },
           {
             title: '厂商信息',
-            key: 'address'
+            key: 'address',
+            width:250
           },
           {
             title: '名称/描述',
-            key: 'address'
+            key: 'address',
+            width:250
           },
           {
             title: '建档日期',
             key: 'address'
+          },
+          {
+            title: '状态',
+            key: 'state',
+            width:80
           },
           {
             title: '操作',
@@ -129,152 +142,166 @@ import Template2 from './mountingsTemplate/template2'
             name: 'John Brown',
             age: 18,
             address: 'New York No. 1 Lake Park',
-            date: '2016-10-03'
+            date: '2016-10-03',
+            state:'已驳回'
           },
           {
             name: 'Jim Green',
             age: 24,
             address: 'London No. 1 Lake Park',
-            date: '2016-10-01'
+            date: '2016-10-01',
+            state:'审核中'
           },
           {
             name: 'Joe Black',
             age: 30,
             address: 'Sydney No. 1 Lake Park',
-            date: '2016-10-02'
+            date: '2016-10-02',
+            state:'已驳回'
           },
           {
             name: 'Jon Snow',
             age: 26,
             address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            date: '2016-10-04',
+            state:'审核中'
           },
           {
             name: 'Jon Snow',
             age: 26,
             address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            date: '2016-10-04',
+            state:'已驳回'
           },
           {
             name: 'Jon Snow',
             age: 26,
             address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            date: '2016-10-04',
+            state:'已驳回'
           },
           {
             name: 'Jon Snow',
             age: 26,
             address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            date: '2016-10-04',
+            state:'已驳回'
           },
           {
             name: 'Jon Snow',
             age: 26,
             address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            date: '2016-10-04',
+            state:'已驳回'
           },
           {
             name: 'Jon Snow',
             age: 26,
             address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            date: '2016-10-04',
+            state:'已驳回'
           },
           {
             name: 'Jon Snow',
             age: 26,
             address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            date: '2016-10-04',
+            state:'审核中'
           },
           {
             name: 'Jon Snow',
             age: 26,
             address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            date: '2016-10-04',
+            state:'审核中'
           },
           {
             name: 'Jon Snow',
             age: 26,
             address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            date: '2016-10-04',
+            state:'已驳回'
           },
           {
             name: 'Jon Snow',
             age: 26,
             address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            date: '2016-10-04',
+            state:'已驳回'
           },
           {
             name: 'Jon Snow',
             age: 26,
             address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            date: '2016-10-04',
+            state:'已驳回'
           },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
-          },
+          // {
+          //   name: 'Jon Snow',
+          //   age: 26,
+          //   address: 'Ottawa No. 2 Lake Park',
+          //   date: '2016-10-04'
+          // },
+          // {
+          //   name: 'Jon Snow',
+          //   age: 26,
+          //   address: 'Ottawa No. 2 Lake Park',
+          //   date: '2016-10-04'
+          // },
+          // {
+          //   name: 'Jon Snow',
+          //   age: 26,
+          //   address: 'Ottawa No. 2 Lake Park',
+          //   date: '2016-10-04'
+          // },
+          // {
+          //   name: 'Jon Snow',
+          //   age: 26,
+          //   address: 'Ottawa No. 2 Lake Park',
+          //   date: '2016-10-04'
+          // },
+          // {
+          //   name: 'Jon Snow',
+          //   age: 26,
+          //   address: 'Ottawa No. 2 Lake Park',
+          //   date: '2016-10-04'
+          // },
+          // {
+          //   name: 'Jon Snow',
+          //   age: 26,
+          //   address: 'Ottawa No. 2 Lake Park',
+          //   date: '2016-10-04'
+          // },
+          // {
+          //   name: 'Jon Snow',
+          //   age: 26,
+          //   address: 'Ottawa No. 2 Lake Park',
+          //   date: '2016-10-04'
+          // },
+          // {
+          //   name: 'Jon Snow',
+          //   age: 26,
+          //   address: 'Ottawa No. 2 Lake Park',
+          //   date: '2016-10-04'
+          // },
+          // {
+          //   name: 'Jon Snow',
+          //   age: 26,
+          //   address: 'Ottawa No. 2 Lake Park',
+          //   date: '2016-10-04'
+          // },
+          // {
+          //   name: 'Jon Snow',
+          //   age: 26,
+          //   address: 'Ottawa No. 2 Lake Park',
+          //   date: '2016-10-04'
+          // },
+          // {
+          //   name: 'Jon Snow',
+          //   age: 26,
+          //   address: 'Ottawa No. 2 Lake Park',
+          //   date: '2016-10-04'
+          // },
         ]
       }
     },

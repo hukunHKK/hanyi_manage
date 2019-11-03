@@ -1,15 +1,15 @@
 <template>
   <div class="img-upload-wrap" @drop='drop'>
-    <div v-for="(item,index) in uploadImgList" class="img-wrap">
+    <div v-for="(item,index) in uploadImgList" class="img-wrap" :style="{marginTop:top+'px',marginBottom:bottom+'px'}">
       <img :src="item" />
       <Icon type="ios-trash-outline" @click="deleteImg(index)"/>
     </div>
-    <div class="img-add-btn">
+    <div class="img-add-btn" :style="{marginTop:top+'px',marginBottom:bottom+'px'}">
       <Icon type="md-add" @click='clickInput'/>
       <input type="file" ref="imgInput" @change='changeImg' hidden>
     </div>
-    <div v-if="uploadImgList.length===0" class="prompt-message">
-      拖拽图片进行上传，最多上传{{count}}张，每张最大2M</div>
+    <div v-if="uploadImgList.length===0" class="prompt-message" :style="{lineHeight:lineHeight+'px'}">
+      拖拽图片进行上传，最多上传{{count}}张，每张最大{{size}}M</div>
   </div>
 </template>
 <script>
@@ -20,14 +20,25 @@
       },
       count: {
         default: 5
+      },
+      top:{
+        default:15
+      },
+      bottom:{
+        default:15
+      },
+      lineHeight:{
+        default:160
       }
     },
     data() {
       return {
-        uploadImgList: []
+        uploadImgList: [],
+        showInput:null
       };
     },
     created() {
+      this.showInput = this.$attrs.hasOwnProperty('value');
       document.ondragover = function (e) {
         e.preventDefault();
       };
@@ -88,11 +99,12 @@
           input&&(input.value = '')
           return;
         }
-        let reader = new FileReader();
+        let reader = new FileReader()
         //将图片转成base64格式
-        reader.readAsDataURL(fileInfo);
+        reader.readAsDataURL(fileInfo)
         reader.onload = e => {
-          this.uploadImgList.push(e.target.result);
+          this.uploadImgList.push(e.target.result)
+          this.showInput&&this.$emit('input',e.target.result)
           this.$emit('update:upload-img-list', this.uploadImgList)
           //清空input数据，以便继续上传同样的图片
           input&&(input.value = '')

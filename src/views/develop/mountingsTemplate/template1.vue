@@ -237,11 +237,18 @@
       </div>
     </Modal>
     <single-input-manage
+      modal-title="配件材质"
       :modal-state.sync="textureManageModal"
       :type-list.sync="textureList"
+      v-if="textureManageModal"
       width="360"
     ></single-input-manage>
-    <single-input-manage :modal-state.sync="typeManageModal" :type-list.sync="typeList" width="360"></single-input-manage>
+    <single-input-manage 
+      modal-title="配件类型" 
+      :modal-state.sync="typeManageModal"
+      v-if="typeManageModal"
+      :type-list.sync="typeList" width="360">
+    </single-input-manage>
   </div>
 </template>
 <script>

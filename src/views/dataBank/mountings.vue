@@ -20,10 +20,17 @@
             <Option value="shanghai">倒叙</Option>
           </Select>
         </FormItem>
-        <FormItem label="名称/描述">
-          <Input v-model="formItem.input" placeholder="请输入" style="width: 300px"></Input>
+        <FormItem label="状态">
+          <Select v-model="formItem.select">
+            <Option value="beijing">待审核</Option>
+            <Option value="shanghai">已驳回</Option>
+            <Option value="shanghai">编辑中</Option>
+          </Select>
         </FormItem>
-        <FormItem>
+        <FormItem label="名称/描述">
+          <Input v-model="formItem.input" placeholder="请输入" style="width: 186px"></Input>
+        </FormItem>
+        <FormItem :label-width="20">
           <Button type="primary" @click="handleSubmit('formValidate')">搜索</Button>
         </FormItem>
       </Form>
@@ -58,13 +65,23 @@
           slider: [20, 50],
           textarea: ''
         },
-        columns1: [{
+        columns1: [
+          {
+            title: '序号',
+            key: 'name',
+            type: 'index',
+            align:'center',
+            width:70
+          },
+          {
             title: '配件类型',
-            key: 'name'
+            key: 'name',
+            width:120
           },
           {
             title: '配件编号',
-            key: 'age'
+            key: 'age',
+            width:120
           },
           {
             title: '图片',
@@ -72,18 +89,25 @@
           },
           {
             title: '厂商信息',
-            key: 'address'
+            key: 'address',
+            width:250
           },
           {
             title: '名称/描述',
-            key: 'address'
+            key: 'address',
+            width:250
           },
           {
             title: '建档日期',
             key: 'address'
           },
           {
-            title: 'Action',
+            title: '状态',
+            key: 'state',
+            width:80
+          },
+          {
+            title: '操作',
             slot: 'action',
             width: 150,
             align: 'center'
@@ -93,25 +117,29 @@
             name: 'John Brown',
             age: 18,
             address: 'New York No. 1 Lake Park',
-            date: '2016-10-03'
+            date: '2016-10-03',
+            state:'审核中'
           },
           {
             name: 'Jim Green',
             age: 24,
             address: 'London No. 1 Lake Park',
-            date: '2016-10-01'
+            date: '2016-10-01',
+            state:'已驳回'
           },
           {
             name: 'Joe Black',
             age: 30,
             address: 'Sydney No. 1 Lake Park',
-            date: '2016-10-02'
+            date: '2016-10-02',
+            state:'已驳回'
           },
           {
             name: 'Jon Snow',
             age: 26,
             address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            date: '2016-10-04',
+            state:'审核中'
           }
         ]
       }

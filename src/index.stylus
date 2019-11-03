@@ -61,3 +61,11 @@
     margin-left:20px;
   }
 }
+.table-thead-blue{
+  thead{
+    color: #fff;
+    th{
+      background-color: #3876C9;
+    }
+  }  
+}

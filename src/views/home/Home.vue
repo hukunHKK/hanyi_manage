@@ -4,12 +4,22 @@
       <Menu mode="horizontal" active-name="1" class="h-home-header">
         <!-- <div class="layout-logo"></div> -->
         <div class="layout-name">
-          <Icon type="ios-cube" class="icon" />瀚艺内务管理系统
+          <Icon type="ios-cube" class="icon" style="font-size: 36px;" />
+          <span style="font-size: 36px;margin-left: 15px;">瀚艺内务管理系统</span>
         </div>
         <div class="user-info">
           <img src alt />
-          <span>职位&nbsp;</span>
-          <span class="user-name">&nbsp;员工昵称</span>
+          <Icon type="ios-search" style="font-size: 23px;margin-right: 5px;" />
+          <Icon type="ios-notifications-outline" style="font-size: 23px;margin-right: 5px;" />
+          <Icon type="ios-mail-outline" style="font-size: 23px;margin-right: 5px;" />
+          <Icon type="ios-settings-outline" style="font-size: 23px;margin-right: 25px;" />
+          <Icon type="ios-person-outline" style="font-size: 23px;"/>
+          <span style="margin-right: 10px;">产品部 - 管理员</span>
+          <!-- <span>职位&nbsp;</span>
+          <span class="user-name">&nbsp;员工昵称</span> -->
+          <span class="sign-out">
+            <Icon type="ios-key-outline" style="transform: rotate(-90deg);font-size: 21px;" />&nbsp;修改密码
+          </span>
           <span class="sign-out">
             <Icon type="md-power" />&nbsp;退出
           </span>
@@ -97,8 +107,8 @@ export default {
 
   .h-home-header {
     background-color: #0358cc;
-    height: 64px;
-    line-height: 64px;
+    height: 80px;
+    line-height: 80px;
   }
 }
 

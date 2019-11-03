@@ -36,6 +36,10 @@
         <Input placeholder="可设定同款编号，多个编号以、隔开" :disabled='isAudit' />
       </FormItem>
     </Form>
+    <!-- 图片上传 -->
+    <div class="border-1px" style="height:160px;margin-top:20px;">
+      <img-upload :upload-img-list.sync="uploadImgList" />
+    </div>
     <div class="info-title">
       <span>厂商信息</span>
       <Button type="primary" @click="manufacturersModal=true">选择厂商</Button>
@@ -63,77 +67,77 @@
         </FormItem>
       </Form>
     </div>
+    <!-- 模具信息 -->
+    <div class="info-title">
+      <span>模具信息</span>
+      <Button type="primary" @click="mouldModal=true">选择模具</Button>
+    </div>
+    <div class="border-1px texture-prop" style="margin-top:20px;padding:23px;">
+      <Table :columns="mouldThead" class="table-thead-blue" :data="choosedMouldList" height="300" :key="tableKey">
+        <template slot-scope="{ row, index }" slot="img" style="font-size: 0;">
+          <img :src="row.url" style="height:38px;">
+        </template>
+        <template slot-scope="{ row, index }" slot="action">
+          <Icon @click="removeChoosedMould(index)" type="ios-trash-outline" style="color:#3876c9;font-size: 26px;" />
+        </template>
+      </Table>
+    </div>
     <!-- 配件属性 -->
     <div class="info-title">
       <span>配件属性</span>
       <Button :disabled='isAudit' type="primary" @click="addTypeModal=true">新增类型</Button>
     </div>
     <div class="border-1px texture-prop" style="margin-top:20px;padding:0 0 10px;">
-      <List :split='false' style="padding-left: 20px;">
-        <ListItem v-for='(item,index) in propTypeList' style="padding-bottom:0;">
-          <Button type="primary" @click='propTypeMgBt(item,index)'>{{item.key}}管理</Button>
-          <span style="margin-left:10px;">{{item.list | listToStr}}</span>
-        </ListItem>
-      </List>
-      <div style="margin: 10px 0;">
-        <span style="margin-left:25px;color: #0058cc;vertical-align: super;">属性报价：</span>
-      </div>
-      <div class="content" style="padding:0 24px;">
-        <form  ref="propTableForm">
-        <Table :columns="propPriceThead" :data="propPriceData" style="overflow:visible;">
-          <template slot-scope="{ row, index }" slot="name">
-            <Input type="text" v-model="propPriceData[index].name" :disabled='isAudit' />
-          </template>
-          <template slot-scope="{ row, index }" slot="code">
-            <Input type="text" v-model="propPriceData[index].code" :disabled='isAudit' />
-          </template>
-          <template slot-scope="{ row, index }" slot="img">
-            <td-upload :name='propPriceData[index].code' :disabled='isAudit'></td-upload>
-          </template>
-          <template slot-scope="{ row, index }" :slot="item.title" v-for="item in tablePropTheadList">
-            <Select v-model="propPriceData[index].property[item.title]" :disabled='isAudit' style="width:120px;">
-              <Option :value="i" v-for="i in item.selectList">{{i}}</Option>
-            </Select>
-          </template>
-          <template slot-scope="{ row, index }" slot="price">
-            <!-- <Input type="text" v-model="propPriceData[index].price" /> -->
-            <type-input number v-model="propPriceData[index].price" :disabled='isAudit' />
-          </template>
-          <template slot-scope="{ row, index }" slot="action">
-            <!-- <add-btn color='#1296db' border-color='#1296db'/> -->
-            <remove-btn :disabled='isAudit' color='#1296db' @click.native='deletePriceItem(index)'
-              border-color='#1296db' style="padding:1px 4px;" />
-          </template>
-        </Table>
-        </form>
-      </div>
       <Form :label-width="115" inline label-colon style="padding-top:12px;padding-right: 12px;margin-top:20px;">
+        <FormItem label="厂商内部编号">
+          <Input style="width: 255px" placeholder="请输入厂商内部编号" />
+        </FormItem>
+        <FormItem label="单价" :label-width="70">
+          <Input style="width: 255px" placeholder="请输入" />
+          <Select style="width:80px;margin-left: 10px;" :disabled='isAudit' value='LBS'>
+            <Option value="LBS">LBS</Option>
+            <Option value="KG">KG</Option>
+            <Option value="T">T</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="名称\描述" style="width:100%;">
+          <Input type="textarea" placeholder="请输入名称\描述" style="width:100%;" />
+        </FormItem>
         <FormItem label style="width:100%;" :label-width="20">
-          <Button style="margin-right: 5px" type="primary" @click="textureManageModal=true"
-            :disabled='isAudit'>配件材质</Button>
+          <Button style="margin-right: 5px" type="primary" @click="textureManageModal=true">配件材质</Button>
           {{textureList | listToStr}}
         </FormItem>
       </Form>
       <div style="margin-bottom: 10px;">
         <span style="margin-left:25px;color: #0058cc;vertical-align: super;">配件属性：</span>
-        <div @click="addProp" class="prop-add-btn" :disabled='isAudit'>
+        <!-- <div @click="addProp" class="prop-add-btn">
           <Icon type="md-add" style="font-size: 30px;" />
-        </div>
+        </div> -->
       </div>
       <check-input :data="propList">
-        <div style="padding:0 0 10px 37px;" v-for="(item,index) in propList">
-          <Input v-model="item.key" maxlength="8" style="width: 170px" :disabled='isAudit' placeholder="请输入名称" />
-          <Input v-model="item.value" maxlength="30" :disabled='isAudit' style="width: 296px;margin-left: 15px;"
-            placeholder="请输入描述" />
-          <div class="remove-btn" @click="removeProp(index)">
+        <div style="padding:0 0 10px 37px;">
+          <Form :label-width="70" inline label-colon style="padding-right: 12px;">
+            <FormItem label="重量">
+              <Input style="width: 255px" placeholder="请输入" />
+              <Select style="width:80px;margin-left: 10px;" :disabled='isAudit' value='LBS'>
+                <Option value="LBS">LBS</Option>
+                <Option value="KG">KG</Option>
+                <Option value="T">T</Option>
+              </Select>
+            </FormItem>
+            <FormItem label="色样">
+              <Input style="width: 255px" placeholder="请输入" />
+            </FormItem>
+          </Form>
+          <!-- <div class="remove-btn" @click="removeProp(index)">
             <Icon type="md-remove" />
-          </div>
+          </div> -->
         </div>
       </check-input>
       <div>
-        <Form :label-width="102" inline label-colon style="padding-top:12px;padding-right: 12px;margin-top:20px;">
+        <Form :label-width="102" inline label-colon style="padding-right: 12px;">
           <FormItem label="备注" style="width:100%;">
-            <Input type="textarea" placeholder :disabled='isAudit' />
+            <Input type="textarea" placeholder />
           </FormItem>
         </Form>
       </div>
@@ -216,6 +220,7 @@
         <Button type="primary" size="large" long @click="addPropTypeBt">确定</Button>
       </div>
     </Modal>
+    <!-- 选择厂商 -->
     <Modal v-model="manufacturersModal" width="700">
       <p slot="header" style="color:#f60;text-align:center;height:22px;">
         <span>选择厂商</span>
@@ -247,8 +252,82 @@
         <Button type="primary" size="large" long @click="chooseManufacturers">确定</Button>
       </div>
     </Modal>
-    <single-input-manage modal-title="配件材质" :modal-state.sync="textureManageModal" :type-list.sync="textureList"
-      width="360"
+    <!-- 选择模具 -->
+    <Modal v-model="mouldModal" width="700">
+      <p slot="header" style="color:#f60;text-align:center;height:22px;">
+        <span>选择模具</span>
+      </p>
+      <div style="text-align:center">
+        <Form :label-width="80" inline label-colon style="padding-top:12px;">
+          <FormItem label="模具编号">
+            <Input style="width: 170px" placeholder="请输入" />
+          </FormItem>
+          <FormItem label="模具名称">
+            <Input style="width: 170px" placeholder="请输入" />
+          </FormItem>
+          <FormItem :label-width="0">
+            <Button style="margin-right: 5px" type="primary">搜索</Button>
+          </FormItem>
+        </Form>
+        <div class="content">
+          <Table :columns="mouldThead" :data="searchedMouldList" height="300" :key="tableKey">
+            <template slot-scope="{ row, index }" slot="img">
+              <img :src="row.url" style="height:38px;">
+            </template>
+            <template slot-scope="{ row, index }" slot="action">
+              <Checkbox v-model="searchedMouldList[index].checked"></Checkbox>
+            </template>
+          </Table>
+          <div class="page-wrap">
+            <div style='float: left;'>
+              <Button @click="addModulModal=true">新增模具</Button>
+            </div>
+            <Page :total="100" show-elevator />
+          </div>
+        </div>
+      </div>
+      <div slot="footer">
+        <Button type="primary" size="large" long @click="chooseMould">确定</Button>
+      </div>
+    </Modal>
+    <!-- 新增模具 -->
+    <Modal v-model="addModulModal" :modal='addModulData' width="700">
+      <p slot="header" style="color:#f60;text-align:center;height:22px;">
+        <span>新增模具</span>
+      </p>
+      <div>
+        <Form :label-width="80" inline label-colon style="padding-top:12px;">
+          <FormItem label="模具编号">
+            <Input v-model='addModulData.code' placeholder="请输入" />
+          </FormItem>
+          <FormItem label="模具名称">
+            <Input v-model='addModulData.name' placeholder="请输入" />
+          </FormItem>
+          <div>
+            <FormItem label="产值">
+              <Input v-model='addModulData.lbs' placeholder="请输入" style="width:186px;"/>
+              时/LBS
+            </FormItem>
+          </div>
+          <div>
+            <FormItem label="模具图片">
+              <img-upload v-model='addModulData.url' :count='1' :upload-img-list.sync="addModulImgList" top='7'
+                bottom='7' line-height='144' />
+              <!-- <Input placeholder="请输入" /> -->
+            </FormItem>
+          </div>
+          <FormItem label="备注">
+            <Input v-model='addModulData.remark' type="textarea" :autosize="{maxRows:6}" placeholder="请输入"
+              style="width: 462px;" />
+            <!-- <Input placeholder="请输入" /> -->
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="primary" size="large" long @click="addModulSubmit">确定</Button>
+      </div>
+    </Modal>
+    <single-input-manage :modal-state.sync="textureManageModal" :type-list.sync="textureList" width="360"
       v-if='textureManageModal'></single-input-manage>
     <single-input-manage modal-title='配件类型' :modal-state.sync="typeManageModal" :type-list.sync="typeList" width="360"
       v-if='typeManageModal'>
@@ -259,18 +338,28 @@
   </div>
 </template>
 <script>
-import { log } from 'util';
+  import {
+    log
+  } from 'util';
   export default {
     props: {
       templateData: {},
-      isAudit:{
-        default:false
+      isAudit: {
+        default: false
       }
     },
     data() {
       return {
-        tablePropTheadList:[],
-        propPriceData: [{property:{},name:'',code:'',price:''}],
+        addModulData:{},
+        uploadImgList: [],
+        choosedMouldList: [],
+        tablePropTheadList: [],
+        propPriceData: [{
+          property: {},
+          name: '',
+          code: '',
+          price: ''
+        }],
         index: null,
         propTypeList: [],
         itemPropTypeList: [],
@@ -281,20 +370,25 @@ import { log } from 'util';
         propTypeManageModal: false,
         manufacturersModal: false,
         textureManageModal: false,
+        mouldModal: false,
+        addModulModal: false,
         propListValid: null,
         value: "",
         typeList: [],
         textureList: [],
         propList: [],
+        addModulImgList: [],
         tableKey: "",
         manufacturersInfo: {},
-        columns1: [{
+        columns1: [
+          {
             title: "厂商编号",
             key: "id"
           },
           {
             title: "厂商名称",
-            key: "name"
+            key: "name",
+            align:'center'
           },
           {
             title: "选择",
@@ -303,7 +397,31 @@ import { log } from 'util';
             align: "center"
           }
         ],
-        manufacturersList: [{
+        mouldThead:[
+          {
+            title:'模具编号',
+            key:'code',
+            align:'center'
+          },
+          {
+            title:'模具图片',
+            slot:'img',
+            align:'center',
+            className:"imgTd"
+          },
+          {
+            title:'产值/时/LBS',
+            key:'lbs',
+            align:'center'
+          },
+          {
+            title:'操作',
+            slot:'action',
+            align:'center'
+          }
+        ],
+        manufacturersList: [
+          {
             name: "John Brown",
             id: 181241,
             address: "湖北",
@@ -322,12 +440,30 @@ import { log } from 'util';
             contact: "彭于晏"
           }
         ],
+        searchedMouldList:[
+          {
+            code:'89757',
+            url:require('../../../assets/logo.png'),
+            lbs:50
+          },
+          {
+            code:'54654',
+            url:require('../../../assets/logo.png'),
+            lbs:60
+          },
+          {
+            code:'21425',
+            url:require('../../../assets/logo.png'),
+            lbs:70
+          },
+        ],
         addTypeRule: {
           type: [
 
           ]
         },
-        initPropPriceThead: [{
+        initPropPriceThead: [
+          {
             title: '名称/描述',
             slot: 'name',
             align: 'center'
@@ -348,25 +484,30 @@ import { log } from 'util';
             align: 'center'
           },
           {
-            slot:'action',
+            slot: 'action',
             renderHeader: (h, params) => {
-              return h('Button',{
-                style:{
-                  padding:'4px'
+              return h('Button', {
+                style: {
+                  padding: '4px'
                 },
-                on:{
-                  click:()=>{
-                    this.propPriceData.push({property:{},name:'',code:'',price:''})
+                on: {
+                  click: () => {
+                    this.propPriceData.push({
+                      property: {},
+                      name: '',
+                      code: '',
+                      price: ''
+                    })
                   }
                 }
-              },[h('Icon',{
-                attrs:{
-                  type:'md-add'
+              }, [h('Icon', {
+                attrs: {
+                  type: 'md-add'
                 },
-                style:{
-                  fontSize:'20px'
+                style: {
+                  fontSize: '20px'
                 }
-              },'')]);
+              }, '')]);
             },
             align: 'center'
           },
@@ -401,7 +542,7 @@ import { log } from 'util';
       storage() {
         let formdata = new FormData(this.$refs.propTableForm)
         console.log(formdata);
-        this.$axios.post('/a/k',formdata)
+        this.$axios.post('/a/k', formdata)
         this.verifyPropPriceData()
         // this.close();
       },
@@ -429,25 +570,36 @@ import { log } from 'util';
         this.itemPropTypeList = item.list
         this.index = index
       },
-      deletePriceItem(index){
-        this.propPriceData.splice(index,1)
+      deletePriceItem(index) {
+        this.propPriceData.splice(index, 1)
       },
-      verifyPropPriceData(){
-        return this.propPriceData.some(item=>{
+      verifyPropPriceData() {
+        return this.propPriceData.some(item => {
           for (let key in item) {
-            if(key!=='property'){
-              if(item[key] == ''){
+            if (key !== 'property') {
+              if (item[key] == '') {
                 return true
               }
-            }else{
-              for(let k in item[key]){
-                if(item[key][k] == ''){
+            } else {
+              for (let k in item[key]) {
+                if (item[key][k] == '') {
                   return true
                 }
               }
             }
           }
         })
+      },
+      chooseMould(){
+        this.choosedMouldList = this.searchedMouldList.filter(item=>item.checked)
+        this.mouldModal = false 
+      },
+      removeChoosedMould(index){
+        this.choosedMouldList.splice(index,1)
+      },
+      addModulSubmit(){
+        this.searchedMouldList.push(this.addModulData)
+        this.addModulModal = false
       }
     },
     computed: {
@@ -466,40 +618,43 @@ import { log } from 'util';
       itemPropTypeList(n) {
         this.propTypeList[this.index].list = n
       },
-      propTypeList:{
-        handler(n){
+      propTypeList: {
+        handler(n) {
           //每次属性有变动时初始化表头数据
           //因为有renderHeader，所以需要用深度克隆，JSON无效
           this.propPriceThead = this.$deepClone(this.initPropPriceThead)
           this.tablePropTheadList = []
-          n.forEach(item=>{
+          n.forEach(item => {
             //渲染表头的数据
-            this.propPriceThead.splice(3,0,{
-              title:item.key,
-              slot:item.key,
-              align:'center',
-              width:140
+            this.propPriceThead.splice(3, 0, {
+              title: item.key,
+              slot: item.key,
+              align: 'center',
+              width: 140
             })
             //渲染属性部分的表头数据
-            this.tablePropTheadList.push({title:item.key,selectList:item.list})
+            this.tablePropTheadList.push({
+              title: item.key,
+              selectList: item.list
+            })
             //列表数据，防止添加属性后不选择属性直接提交，检测不到下拉框为空
-            this.propPriceData.forEach(it=>{
-              if(!it.property.hasOwnProperty(item.key)){
+            this.propPriceData.forEach(it => {
+              if (!it.property.hasOwnProperty(item.key)) {
                 it[item.key] = ''
               }
             })
           })
           console.log(this.tablePropTheadList);
-          
+
         },
-        deep:true
+        deep: true
       }
     },
     created() {
       this.propPriceThead = this.$deepClone(this.initPropPriceThead)
       let data = new FormData()
-      data.append('name','hh')
-      this.$axios.post('/a/b',{
+      data.append('name', 'hh')
+      this.$axios.post('/a/b', {
         data
       })
     }
@@ -613,6 +768,9 @@ import { log } from 'util';
       .manufacturers-info .email {
         width: calc(100vw - 500px) !important;
       }
+    }
+    .imgTd{
+      font-size: 0;
     }
   }
 </style>
