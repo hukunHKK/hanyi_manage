@@ -60,6 +60,7 @@
         <template1 :templateData='templateData' v-if='templateData.hyParts.modelType === "模板一"' ref="模板一" />
         <template2 :templateData='templateData' v-if='templateData.hyParts.modelType === "模板二"' ref="模板二" />
         <template3 :templateData='templateData' v-if='templateData.hyParts.modelType === "模板三"' ref="模板三" />
+        <templateSalver :templateData='templateData' v-if='templateData.hyParts.modelType === "特殊类盆"' ref="特殊类盆" />
       </template>
     </my-modal>
     <single-type-manage
@@ -85,11 +86,13 @@
 import Template1 from './mountingsTemplate/template1'
 import Template2 from './mountingsTemplate/template2'
 import Template3 from './mountingsTemplate/template3'
+import TemplateSalver from './mountingsTemplate/templateSalver'
   export default {
     components:{
       template1:Template1,
       template2:Template2,
       template3:Template3,
+      templateSalver:TemplateSalver,
     },
     data() {
       return {
@@ -97,7 +100,7 @@ import Template3 from './mountingsTemplate/template3'
         typeManageModal:false,
         templateData:{
           hyParts:{
-            modelType:'模板一'
+            modelType:'特殊类盆'
           },
           hyFactoryPropertyMap:{
             property:[]
