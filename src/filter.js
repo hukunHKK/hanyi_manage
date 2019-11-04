@@ -5,6 +5,7 @@ Vue.filter('listToStr',function(value) {
   } else if (value.length === 1) {
     return "含 " + value.join("、");
   } else {
-    return "含 " + value.join("、") + "；";
+    return "含 " + value.join("、")
+    // return "含 " + value.join("、") + "；";
   }
 })

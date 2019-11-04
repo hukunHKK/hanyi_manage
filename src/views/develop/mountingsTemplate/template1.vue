@@ -5,21 +5,21 @@
     </div>
     <Form :label-width="115" inline label-colon class="border-1px" style="padding-top:12px;">
       <FormItem label="建档模板">
-        <Select v-model="templateData.type" style="width:120px;">
-          <Option value="template1">模板1</Option>
-          <Option value="template2">模板2</Option>
-          <Option value="template3">模板3</Option>
-          <Option value="special-pot">特殊类 盆</Option>
-          <Option value="special-box">特殊类 箱麦</Option>
-          <Option value="special-froth">特殊类 泡沫</Option>
+        <Select v-model="templateData.hyParts.modelType" style="width:120px;">
+          <Option value="模板一">模板一</Option>
+          <Option value="模板二">模板二</Option>
+          <Option value="模板三">模板三</Option>
+          <Option value="特殊类盆">特殊类盆</Option>
+          <Option value="特殊类箱麦">特殊类箱麦</Option>
+          <Option value="特殊类泡沫">特殊类泡沫</Option>
         </Select>
       </FormItem>
       <FormItem label="配件类型">
-        <Select v-model="templateData.a" style="width:120px;">
+        <Select v-model="templateData.hyParts.partType" style="width:120px;">
           <!-- <Option value="penzi">盆子</Option>
           <Option value="huaban">花瓣</Option>
           <Option value="yezi">叶子</Option>-->
-          <Option v-for="item in typeList" :value="item" :key="item">{{ item }}</Option>
+          <Option v-for="item in typeList" :value="item.typeName" :key="item.typeName">{{ item.typeName }}</Option>
         </Select>
       </FormItem>
       <FormItem :label-width="0">
@@ -33,10 +33,10 @@
       style="padding-top:12px;padding-right: 12px;margin-top:20px;"
     >
       <FormItem label="唯一编号">
-        <Input style="width: 255px" placeholder="请输入" />
+        <Input v-model='templateData.hyParts.partCode' style="width: 255px" placeholder="请输入" />
       </FormItem>
       <FormItem label="同款编号">
-        <Input placeholder="可设定同款编号，多个编号以、隔开" />
+        <Input v-model='templateData.hyParts.sameCode' placeholder="可设定同款编号，多个编号以、隔开" />
       </FormItem>
     </Form>
     <!-- 图片上传 -->
@@ -53,16 +53,16 @@
       <div class="manufacturers-info">厂商详细地址：{{manufacturersInfo.address}}</div>-->
       <Form :label-width="115" label-colon inline class="manufacturers-info">
         <FormItem label="厂商编号">
-          <input type="text" v-model="manufacturersInfo.id" class="disabled-input" disabled />
+          <input type="text" v-model="manufacturersInfo.factoryCode" class="disabled-input" disabled />
         </FormItem>
         <FormItem label="厂商名称">
-          <input type="text" v-model="manufacturersInfo.name" class="disabled-input name" disabled />
+          <input type="text" v-model="manufacturersInfo.factoryName" class="disabled-input name" disabled />
         </FormItem>
         <FormItem label="厂商联系人">
-          <input type="text" v-model="manufacturersInfo.contact" class="disabled-input" disabled />
+          <input type="text" v-model="manufacturersInfo.name" class="disabled-input" disabled />
         </FormItem>
         <FormItem label="联系电话">
-          <input type="text" v-model="manufacturersInfo.phone" class="disabled-input" disabled />
+          <input type="text" v-model="manufacturersInfo.telephone" class="disabled-input" disabled />
         </FormItem>
         <FormItem label="邮箱地址">
           <input
@@ -76,7 +76,7 @@
         <FormItem label="厂商详细地址">
           <input
             type="text"
-            v-model="manufacturersInfo.address"
+            v-model="manufacturersInfo.factoryAddress"
             class="disabled-input address"
             disabled
           />
@@ -95,22 +95,22 @@
         style="padding-top:12px;padding-right: 12px;margin-top:20px;"
       >
         <FormItem label="厂商内部编号">
-          <Input style="width: 255px" placeholder="请输入厂商内部编号" />
+          <Input v-model='templateData.hyFactoryPropertyMap.factoryPartCode' style="width: 255px"
+            placeholder="请输入厂商内部编号" />
         </FormItem>
         <FormItem label="单价" :label-width="70">
-          <Input style="width: 255px" placeholder="请输入" />
+          <Input v-model='templateData.hyFactoryPropertyMap.factoryprice' style="width: 255px" placeholder="请输入" />
         </FormItem>
         <FormItem label="名称\描述" style="width:100%;">
-          <Input type="textarea" placeholder="请输入名称\描述" style="width:100%;" />
+          <Input v-model='templateData.hyFactoryPropertyMap.propertyName' type="textarea" placeholder="请输入名称\描述"
+            style="width:100%;" />
         </FormItem>
         <FormItem label style="width:100%;" :label-width="20">
           <Button style="margin-right: 5px" type="primary" @click="textureManageModal=true">配件材质</Button>
-          <Select v-model="textureList" style="width:220px;margin-right:10px;" multiple :max-tag-count='2'>
-            <Option value="1">陶瓷</Option>
-            <Option value="2">布料</Option>
-            <Option value="3">沙子</Option>
+          <Select v-model="selectTexture" style="width:220px;margin-right:10px;" multiple :max-tag-count='2'>
+            <Option :value="item.materialName" v-for='item in textureList'>{{item.materialName}}</Option>
         </Select>
-          <span>{{textureList | listToStr}}</span>
+          <span>{{selectTexture | listToStr}}</span>
         </FormItem>
       </Form>
       <div style="margin-bottom: 10px;">
@@ -141,7 +141,7 @@
           style="padding-top:12px;padding-right: 12px;margin-top:20px;"
         >
           <FormItem label="备注" style="width:100%;">
-            <Input type="textarea" placeholder />
+            <Input v-model='templateData.hyFactoryPropertyMap.remark' type="textarea" placeholder />
           </FormItem>
         </Form>
       </div>
@@ -153,24 +153,24 @@
     <div class="border-1px audit-wrap">
       <Form :label-width="115" label-colon inline ref="submitAudit" method="post" action="/a/b" enctype="multipart/form-data">
         <FormItem label="提交审核">
-          <Input value="请审核入库" style="width: 170px" name="shenhe"/>
+          <Input v-model='templateData.hyAudits.reason' value="请审核入库" style="width: 170px" name="shenhe" />
         </FormItem>
         <div>
           <FormItem label="指派到">
-            <Select v-model="templateData.l" style="width:170px;" name="zhipai">
+            <Select v-model="templateData.hyAudits.zhipai" style="width:170px;" name="zhipai">
               <Option value="template1">张三</Option>
               <Option value="template2">李四</Option>
               <Option value="template3">王五</Option>
             </Select>
           </FormItem>
           <FormItem label="通知到">
-            <Input v-model="templateData.k" class="inform-input" name="tongzhi"/>
+            <Input v-model="templateData.hyAudits.noticeUser" class="inform-input" name="tongzhi" />
             <Button type="primary" style="margin-left: 5px">搜索</Button>
           </FormItem>
         </div>
         <div>
           <FormItem label="上传文件">
-            <upload multiple name='wenjian'></upload>
+            <upload multiple name='wenjian' v-model='fileList'></upload>
           </FormItem>
         </div>
       </Form>
@@ -183,10 +183,10 @@
     <div class="border-1px audit-wrap">
       <Form :label-width="115" label-colon inline>
         <FormItem label="建档人">
-          <Input value="配件录入人-寒冬" style="width: 170px" />
+          <Input v-model='templateData.hyAudits.jiandangren' style="width: 170px" />
         </FormItem>
         <FormItem label="建档时间">
-          <Input value="2019-11-11 11:11" style="width: 170px" />
+          <Input v-model='templateData.hyAudits.jiandangshijian' style="width: 170px" />
         </FormItem>
       </Form>
       <Form :label-width="115" label-colon>
@@ -194,13 +194,17 @@
           <div>
             <span style="margin-right:20px;color:#0058cc;">fujian.txt</span>
             <span style="margin-right:20px;color:#0058cc;">zaijin.txt</span>
+            <!-- <span v-for='item in templateData.hyAudits.files' style="margin-right:20px;color:#0058cc;">
+              {{item.name}}
+            </span> -->
           </div>
         </FormItem>
         <FormItem label="回复信息">
-          <Input type="textarea" placeholder style="width:calc(100% - 100px)" />
+          <Input v-model='templateData.hyAudits.message' type="textarea" placeholder
+            style="width:calc(100% - 100px)" />
         </FormItem>
         <FormItem label="通知到">
-          <Input v-model="templateData.k" class="inform-input" />
+          <Input v-model="templateData.hyAudits.notice_user" class="inform-input" />
           <Button type="primary" style="margin-left: 5px">搜索</Button>
         </FormItem>
       </Form>
@@ -242,19 +246,19 @@
         <Button type="primary" size="large" long @click="chooseManufacturers">确定</Button>
       </div>
     </Modal>
-    <single-input-manage
+    <single-type-manage
       modal-title="配件材质管理"
       :modal-state.sync="textureManageModal"
       :type-list.sync="textureList"
       v-if="textureManageModal"
       width="360"
-    ></single-input-manage>
-    <single-input-manage 
+    ></single-type-manage>
+    <single-type-manage
       modal-title="配件类型管理" 
       :modal-state.sync="typeManageModal"
       v-if="typeManageModal"
       :type-list.sync="typeList" width="360">
-    </single-input-manage>
+    </single-type-manage>
   </div>
 </template>
 <script>
@@ -269,9 +273,9 @@ export default {
       textureManageModal: false,
       propListValid: null,
       value: "",
-      typeList: [],
-      textureList: [],
       propList: [],
+      fileList: [],
+      selectTexture: [],
       tableKey: "",
       manufacturersInfo: {},
       uploadImgList: [],
@@ -321,6 +325,7 @@ export default {
       this.tableKey = Math.random();
     },
     chooseManufacturers() {
+      //templateData.hyFactoryPropertyMap选择厂商时把选择的ID传过去[{ID:''}]
       this.manufacturersModal = false;
       this.manufacturersInfo = this.tempManufacturers;
     },
@@ -331,8 +336,33 @@ export default {
       this.propList.splice(index, 1);
     },
     submit() {
-      console.log(this.$refs.submitAudit.$el.submit());
+      //提交时再把图片数据加进去hyPartPicture:[{picture_url:'',picture_type:1}]
+      //配件材质也要加进去(格式化selectTexture)
+      //配件属性propList
+      // 上传的文件fileList
+      // console.log(this.$refs.submitAudit.$el.submit());
       // this.close();
+      let temp = this.$deepClone(this.templateData)
+      temp.hyPartPicture = this.uploadImgList.map(item=>{
+        return {
+          pictureUrl:item,
+          pictureType:1
+        }
+      })
+      this.fileList.forEach(item=>{
+        temp.hyPartPicture.push({
+          pictureUrl:item,
+          pictureType:3
+        })
+      })
+      temp.hyFactoryPropertyMap.caizhi = this.selectTexture.join('、')
+      let prop = {}
+      this.propList.forEach(item=>{
+        prop[item.key] = item.value
+      })
+      temp.hyFactoryPropertyMap.property[0] = prop
+      console.log(temp);
+      this.$axios.post('/a/a',temp)
     },
     storage() {
       this.close();
@@ -345,7 +375,12 @@ export default {
     }
   },
   computed: {
-    
+    textureList(){
+    return this.$store.state.mountings.textureList
+    },
+    typeList(){
+    return this.$store.state.mountings.typeList
+    }
   },
   watch: {
     propList: {
@@ -359,7 +394,6 @@ export default {
     }
   },
   created() {
-    this.textureList = [1,2,3]
     return 
     //查询textureList
     // this.$axios.get('/a').then(res=>{

@@ -57,24 +57,28 @@
         <Button type="primary" style="width:85px;" @click="storage">暂存</Button>
       </template>
       <template #content>
-        <template1 :templateData='templateData' v-if='templateData.type === "template1"' ref="template1" />
-        <template2 :templateData='templateData' v-if='templateData.type === "template2"' ref="template2" />
-        <template3 :templateData='templateData' v-if='templateData.type === "template3"' ref="template3" />
+        <template1 :templateData='templateData' v-if='templateData.hyParts.modelType === "模板一"' ref="模板一" />
+        <template2 :templateData='templateData' v-if='templateData.hyParts.modelType === "模板二"' ref="模板二" />
+        <template3 :templateData='templateData' v-if='templateData.hyParts.modelType === "模板三"' ref="模板三" />
       </template>
     </my-modal>
-    <single-input-manage
+    <single-type-manage
       modal-title="配件材质管理"
       :modal-state.sync="textureManageModal"
-      dispatch='getTextureList'
+      dispatch='setTextureList'
+      k='materialName'
       v-if="textureManageModal"
+      :type-list.sync="textureList"
       width="360"
-    ></single-input-manage>
-    <single-input-manage 
+    ></single-type-manage>
+    <single-type-manage 
       modal-title="配件类型管理" 
       :modal-state.sync="typeManageModal"
+      k='typeName'
+      dispatch='setTypeList'
       v-if="typeManageModal"
       :type-list.sync="typeList" width="360">
-    </single-input-manage>
+    </single-type-manage>
   </div>
 </template>
 <script>
@@ -91,10 +95,15 @@ import Template3 from './mountingsTemplate/template3'
       return {
         textureManageModal:false,
         typeManageModal:false,
-        textureList:this.$store.state.mountings.textureList,
-        typeList:this.$store.state.mountings.typeList,
         templateData:{
-          type:'template1'
+          hyParts:{
+            modelType:'模板一'
+          },
+          hyFactoryPropertyMap:{
+            property:[]
+          },
+          hyAudits:{},
+          hyPartPicture:[]
         },
         formItem: {
           input: '',
@@ -259,7 +268,7 @@ import Template3 from './mountingsTemplate/template3'
     methods:{
       bookbuilding(){
         this.$store.commit('setMyModalShow', true);
-        this.templateData.type = 'template1';
+        this.templateData.hyParts.modelType = 'template一';
       },
       storage(){
         this.$refs[this.templateData.type].storage()
@@ -274,15 +283,19 @@ import Template3 from './mountingsTemplate/template3'
       }
     },
     created(){
-      return
+      // return
       // 查询配件类型
-      this.$axios.get('/a').then(res=>{
-
-      })
+      this.$store.dispatch('getTypeList')
       // 查询配件材质
-      this.$axios.get('/a').then(res=>{
-        
-      })
+      this.$store.dispatch('getTextureList')
+    },
+    computed: {
+      textureList(){
+        return this.$store.state.mountings.textureList
+      },
+      typeList(){
+        return this.$store.state.mountings.typeList
+      }
     }
   }
 </script>

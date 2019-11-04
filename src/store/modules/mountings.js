@@ -2,7 +2,7 @@ import axios from "axios"
 
 const state = {
   textureList:[],
-  typeList:[1,2]
+  typeList:[]
 }
 const getters = {
 
@@ -12,20 +12,43 @@ const mutations = {
     state.textureList = value
   },
   setTypeList(state, value){
-    state.textureList = value
+    state.typeList = value
   }
 }
 const actions = {
-  async getTextureList(store,list){
+  async setTextureList(store,list){
     await axios.post('/set',list)
     let data = axios.get('/get')
     store.commit('setTextureList',data)
   },
-  async getTypeList(store,list){
+  async setTypeList(store,list){
+    store.commit('setTypeList', list)
+    store.dispatch('getTypeList')
+    return 
     await axios.post('/set',list)
     let data = axios.get('/get')
     store.commit('setTypeList',data)
-  }
+  },
+  async getTypeList(store){
+    store.commit('setTypeList', [
+      {typeName:'盆子',id:1},
+      {typeName:'花朵',id:2},
+      {typeName:'花枝',id:3},
+    ])
+    return
+    let data = axios.get('/get')
+    store.commit('setTypeList', data)
+  },
+  async getTextureList(store, list){
+    store.commit('setTextureList', [
+      { materialName: '塑料', id: 1 },
+      { materialName: '陶瓷', id: 2 },
+      { materialName: '沙子', id: 3 }
+    ])
+    return
+    let data = axios.get('/get')
+    store.commit('setTextureList', data)
+  },
 }
 const mountings = {
   state,

@@ -43,11 +43,14 @@
         type:Array,
         default(){
           return []
+          // console.log(this.dispatch);
+          
+          // return this.$store.state.mountings[this.dispatch]
         }
       },
       modalTitle:String,
       dispatch:{
-        default:false
+        default:''
       }
     },
     data() {

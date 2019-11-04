@@ -5,7 +5,7 @@ import mountings from './modules/mountings'
 Vue.use(Vuex)
 
 const state = {
-  myModalShow:false
+  myModalShow:true
 }
 const mutations = {
   setMyModalShow(state, flag){

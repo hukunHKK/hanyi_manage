@@ -14,6 +14,7 @@ import deepClone from './common'
 import MyModal from './components/myModal.vue';
 import ImgUpload from './components/imgUpload.vue';
 import SingleInputManage from './components/singleInputManage.vue';
+import SingleTypeManage from './components/singleTypeManage.vue';
 import CheckInput from './components/checkInput.vue';
 import Upload from './components/upload.vue';
 import TypeInput from './components/typeInput.vue';
@@ -25,6 +26,7 @@ Vue.config.productionTip = false
 Vue.use(ViewUI);
 Vue.component('my-modal',MyModal);
 Vue.component('img-upload',ImgUpload);
+Vue.component('single-type-manage', SingleTypeManage);
 Vue.component('single-input-manage', SingleInputManage);
 Vue.component('check-input', CheckInput);
 Vue.component('upload', Upload);
