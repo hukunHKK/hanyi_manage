@@ -71,15 +71,8 @@
           <Input v-model='templateData.hyFactoryPropertyMap.factoryPartCode' style="width: 255px"
             placeholder="请输入厂商内部编号" />
         </FormItem>
-        <FormItem label="单价" :label-width="70">
-          <Input v-model='templateData.hyFactoryPropertyMap.factoryprice' style="width: 255px" placeholder="请输入" />
-        </FormItem>
-        <FormItem label="名称\描述" style="width:100%;">
-          <Input v-model='templateData.hyFactoryPropertyMap.propertyName' type="textarea" placeholder="请输入名称\描述"
-            style="width:100%;" />
-        </FormItem>
         <FormItem label style="width:100%;" :label-width="20">
-          <Button style="margin-right: 5px" type="primary" @click="textureManageModal=true">配件材质</Button>
+          <Button style="margin-right: 5px" type="primary" @click="textureManageBt">配件材质</Button>
           <Select v-model="selectTexture" style="width:220px;margin-right:10px;" multiple :max-tag-count='2'>
             <Option :value="item.materialName" v-for='item in textureList'>{{item.materialName}}</Option>
           </Select>
@@ -209,11 +202,11 @@
         <Button type="primary" size="large" long @click="chooseManufacturers">确定</Button>
       </div>
     </Modal>
-    <single-type-manage modal-title="配件材质管理" :modal-state.sync="textureManageModal" :type-list.sync="textureList"
+    <!-- <single-type-manage modal-title="配件材质管理" :modal-state.sync="textureManageModal" :type-list.sync="textureList"
       v-if="textureManageModal" width="360"></single-type-manage>
     <single-type-manage modal-title="配件类型管理" :modal-state.sync="typeManageModal" v-if="typeManageModal"
       :type-list.sync="typeList" width="360">
-    </single-type-manage>
+    </single-type-manage> -->
   </div>
 </template>
 <script>
@@ -328,6 +321,9 @@
       },
       checkPropList() {
         this.propList = this.propList.filter(item => item.key !== "");
+      },
+      textureManageBt(){
+        this.$store.commit('setTextureManageModal',true)
       }
     },
     computed: {

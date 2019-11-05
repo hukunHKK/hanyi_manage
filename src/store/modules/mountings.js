@@ -2,7 +2,9 @@ import axios from "axios"
 
 const state = {
   textureList:[],
-  typeList:[]
+  typeList:[],
+  textureManageModal:false,
+  typeManageModal:false
 }
 const getters = {
 
@@ -13,17 +15,24 @@ const mutations = {
   },
   setTypeList(state, value){
     state.typeList = value
+  },
+  setTextureManageModal(state,value){
+    state.textureManageModal = value
+  },
+  setTypeManageModal(state,value){
+    state.typeManageModal = value
   }
 }
 const actions = {
   async setTextureList(store,list){
+    store.commit('setTextureList', list)
+    return
     await axios.post('/set',list)
     let data = axios.get('/get')
     store.commit('setTextureList',data)
   },
   async setTypeList(store,list){
     store.commit('setTypeList', list)
-    store.dispatch('getTypeList')
     return 
     await axios.post('/set',list)
     let data = axios.get('/get')

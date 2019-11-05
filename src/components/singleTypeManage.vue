@@ -31,7 +31,7 @@
 <script>
   export default {
     props: {
-      modalState: Boolean,
+      modalState: String,//modalState为commit的名字
       width: String,
       typeList: {
         type: Array,
@@ -88,12 +88,14 @@
       close() {
         this.modalState1 = false
         setTimeout(() => {
-          this.$emit('update:modalState', false)
+          console.log(this.modalState)
+          this.$store.commit(this.modalState,false)
         }, 200); //200ms防止Modal关闭动画完成之前该组件销毁，导致没动画效果
       }
     },
     created() {
       this.$nextTick(function () {
+        console.log(this.typeList)
         this.modalState1 = true
       })
     },

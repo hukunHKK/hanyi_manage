@@ -46,8 +46,8 @@
       <div class="page-wrap">
         <div style='float: left;'>
           <Button @click="handleSubmit('formValidate')">草稿列表</Button>
-          <Button @click="textureManageBt()">配件材质管理</Button>
-          <Button @click="typeManageBt()">配件类型管理</Button>
+          <Button @click="textureManageBt">配件材质管理</Button>
+          <Button @click="typeManageBt">配件类型管理</Button>
         </div>
         <Page :total="100" show-elevator />
       </div>
@@ -66,7 +66,7 @@
     </my-modal>
     <single-type-manage
       modal-title="配件材质管理"
-      :modal-state.sync="textureManageModal"
+      modal-state="setTextureManageModal"
       dispatch='setTextureList'
       k='materialName'
       v-if="textureManageModal"
@@ -75,7 +75,7 @@
     ></single-type-manage>
     <single-type-manage 
       modal-title="配件类型管理" 
-      :modal-state.sync="typeManageModal"
+      modal-state="setTypeManageModal"
       k='typeName'
       dispatch='setTypeList'
       v-if="typeManageModal"
@@ -99,8 +99,6 @@ import TemplateBox from './mountingsTemplate/templateBox'
     },
     data() {
       return {
-        textureManageModal:false,
-        typeManageModal:false,
         templateData:{
           hyParts:{
             modelType:'特殊类箱麦'
@@ -274,7 +272,7 @@ import TemplateBox from './mountingsTemplate/templateBox'
     methods:{
       bookbuilding(){
         this.$store.commit('setMyModalShow', true);
-        this.templateData.hyParts.modelType = 'template一';
+        this.templateData.hyParts.modelType = '模板一';
       },
       storage(){
         this.$refs[this.templateData.type].storage()
@@ -282,10 +280,11 @@ import TemplateBox from './mountingsTemplate/templateBox'
       textureManageBt(){
         // console.log(this.$store.dispatch('getTextureList'))
         // return
-        this.textureManageModal = true
+        // this.textureManageModal = true
+        this.$store.commit('setTextureManageModal',true)
       },
       typeManageBt(){
-        this.typeManageModal = true
+        this.$store.commit('setTypeManageModal',true)
       }
     },
     created(){
@@ -301,6 +300,12 @@ import TemplateBox from './mountingsTemplate/templateBox'
       },
       typeList(){
         return this.$store.state.mountings.typeList
+      },
+      textureManageModal(){
+        return this.$store.state.mountings.textureManageModal
+      },
+      typeManageModal(){
+        return this.$store.state.mountings.typeManageModal
       }
     }
   }

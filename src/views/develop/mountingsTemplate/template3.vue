@@ -5,13 +5,13 @@
     </div>
     <Form :label-width="115" inline label-colon class="border-1px" style="padding-top:12px;">
       <FormItem label="建档模板">
-        <Select v-model="templateData.type" style="width:120px;" :disabled='isAudit'>
-          <Option value="template1">模板1</Option>
-          <Option value="template2">模板2</Option>
-          <Option value="template3">模板3</Option>
-          <Option value="special-pot">特殊类 盆</Option>
-          <Option value="special-box">特殊类 箱麦</Option>
-          <Option value="special-froth">特殊类 泡沫</Option>
+        <Select v-model="templateData.hyParts.modelType" style="width:120px;">
+          <Option value="模板一">模板一</Option>
+          <Option value="模板二">模板二</Option>
+          <Option value="模板三">模板三</Option>
+          <Option value="特殊类盆">特殊类盆</Option>
+          <Option value="特殊类箱麦">特殊类箱麦</Option>
+          <Option value="特殊类泡沫">特殊类泡沫</Option>
         </Select>
       </FormItem>
       <FormItem label="配件类型">
@@ -85,7 +85,6 @@
     <!-- 配件属性 -->
     <div class="info-title">
       <span>配件属性</span>
-      <Button :disabled='isAudit' type="primary" @click="addTypeModal=true">新增类型</Button>
     </div>
     <div class="border-1px texture-prop" style="margin-top:20px;padding:0 0 10px;">
       <Form :label-width="115" inline label-colon style="padding-top:12px;padding-right: 12px;margin-top:20px;">
