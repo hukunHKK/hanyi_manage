@@ -15,20 +15,11 @@
         </Select>
       </FormItem>
       <FormItem label="配件类型">
-        <Select v-model="templateData.hyParts.partType" style="width:120px;">
-          <!-- <Option value="penzi">盆子</Option>
-          <Option value="huaban">花瓣</Option>
-          <Option value="yezi">叶子</Option>-->
-          <Option
-            v-for="item in typeList"
-            :value="item.typeName"
-            :key="item.typeName"
-          >{{ item.typeName }}</Option>
-        </Select>
+        <Input value="盆" style="width: 130px" disabled/>
       </FormItem>
-      <FormItem :label-width="0">
+      <!-- <FormItem :label-width="0">
         <Button type="primary" style="margin-right: 5px" @click="typeManageModal=true">配件类型管理</Button>
-      </FormItem>
+      </FormItem> -->
     </Form>
     <Form
       :label-width="115"
@@ -458,6 +449,7 @@ export default {
     }
   },
   created() {
+    this.templateData.hyParts.partType = '特殊类盆'
     this.factoryTableThead = [...this.baseTableThead,{slot:'action',title:'选择'}]
     this.partFactoryTableThead = [...this.baseTableThead,{
       slot:'action',
@@ -490,7 +482,6 @@ export default {
 <style lang="stylus" scoped>
 .template {
   padding: 0 48px;
-
   .info-title {
     color: #0058cc;
     border-left: 4px solid #0058cc;
@@ -513,28 +504,6 @@ export default {
 
   .ivu-form-item {
     margin-bottom: 12px;
-  }
-
-  .manufacturers-info {
-    /* font-size: 16px; */
-    max-width: 1300px;
-    padding: 5px 0 5px;
-
-    .disabled-input {
-      display: inline-block;
-      width: 225px;
-      height: 32px;
-      line-height: 1.5;
-      padding: 4px 7px;
-      font-size: 14px;
-      border: 1px solid #dcdee2;
-      border-radius: 4px;
-      color: #515a6e;
-      background-color: #f5f7fa;
-      background-image: none;
-      position: relative;
-      cursor: not-allowed;
-    }
   }
 
   .texture-prop {
@@ -564,43 +533,14 @@ export default {
   }
 
   @media screen and (min-width: 1550px) {
-    .manufacturers-info .name {
-      width: 710px !important;
-    }
-
-    .manufacturers-info .address {
-      width: 1060px !important;
-    }
-
     .audit-wrap .inform-input {
       width: 520px;
     }
   }
 
   @media screen and (max-width: 1550px) {
-    .manufacturers-info .name {
-      width: calc(100vw - 500px) !important;
-    }
-
-    .manufacturers-info .address {
-      width: calc(100vw - 500px) !important;
-    }
-
     .audit-wrap .inform-input {
       width: calc(100vw - 600px);
-    }
-  }
-
-  @media screen and (max-width: 860px) {
-    .manufacturers-info .email {
-      width: calc(100vw - 500px) !important;
-    }
-  }
-
-  .select-multiple {
-    .ivu-select-selection {
-      height: 32px;
-      overflow: hidden;
     }
   }
 }
