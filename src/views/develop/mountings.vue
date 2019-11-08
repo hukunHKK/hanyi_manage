@@ -62,6 +62,7 @@
         <template3 :templateData='templateData' v-if='templateData.hyParts.modelType === "模板三"' ref="模板三" />
         <templateSalver :templateData='templateData' v-if='templateData.hyParts.modelType === "特殊类盆"' ref="特殊类盆" />
         <templateBox :templateData='templateData' v-if='templateData.hyParts.modelType === "特殊类箱麦"' ref="特殊类箱麦" />
+        <templateFroth :templateData='templateData' v-if='templateData.hyParts.modelType === "特殊类泡沫"' ref="特殊类泡沫" />
       </template>
     </my-modal>
     <single-type-manage
@@ -81,14 +82,32 @@
       v-if="typeManageModal"
       :type-list.sync="typeList" width="360">
     </single-type-manage>
+    <single-type-manage 
+      modal-title="纸箱管理" 
+      modal-state="setCartonManageModal"
+      k='cartonName'
+      dispatch='setCartonList'
+      v-if="cartonManageModal"
+      :type-list.sync="cartonList" width="360">
+    </single-type-manage>
+    <single-type-manage 
+      modal-title="纸卡管理" 
+      modal-state="setPaperCardManageModal"
+      k='paperCardName'
+      dispatch='setPaperCardList'
+      v-if="paperCardManageModal"
+      :type-list.sync="paperCardList" width="360">
+    </single-type-manage>
   </div>
 </template>
 <script>
+import {mapState} from 'vuex'
 import Template1 from './mountingsTemplate/template1'
 import Template2 from './mountingsTemplate/template2'
 import Template3 from './mountingsTemplate/template3'
 import TemplateSalver from './mountingsTemplate/templateSalver'
 import TemplateBox from './mountingsTemplate/templateBox'
+import TemplateFroth from './mountingsTemplate/templateFroth'
   export default {
     components:{
       template1:Template1,
@@ -96,12 +115,13 @@ import TemplateBox from './mountingsTemplate/templateBox'
       template3:Template3,
       templateSalver:TemplateSalver,
       templateBox:TemplateBox,
+      templateFroth:TemplateFroth,
     },
     data() {
       return {
         templateData:{
           hyParts:{
-            modelType:'特殊类箱麦'
+            modelType:'特殊类泡沫'
           },
           hyFactoryPropertyMap:{
             property:[]
@@ -288,25 +308,41 @@ import TemplateBox from './mountingsTemplate/templateBox'
       }
     },
     created(){
+      console.log(this);
+      
       // return
       // 查询配件类型
       this.$store.dispatch('getTypeList')
       // 查询配件材质
       this.$store.dispatch('getTextureList')
+      // 查询纸箱类型
+      this.$store.dispatch('getCartonList')
+      // 查询纸卡类型
+      this.$store.dispatch('getPaperCardList')
     },
     computed: {
-      textureList(){
-        return this.$store.state.mountings.textureList
-      },
-      typeList(){
-        return this.$store.state.mountings.typeList
-      },
-      textureManageModal(){
-        return this.$store.state.mountings.textureManageModal
-      },
-      typeManageModal(){
-        return this.$store.state.mountings.typeManageModal
-      }
+      ...mapState({
+        textureList:state=>state.mountings.textureList,
+        textureManageModal:state=>state.mountings.textureManageModal,
+        typeList:state=>state.mountings.typeList,
+        typeManageModal:state=>state.mountings.typeManageModal,
+        cartonList:state=>state.mountings.cartonList,
+        cartonManageModal:state=>state.mountings.cartonManageModal,
+        paperCardList:state=>state.mountings.paperCardList,
+        paperCardManageModal:state=>state.mountings.paperCardManageModal,
+      })
+      // textureList(){
+      //   return this.$store.state.mountings.textureList
+      // },
+      // typeList(){
+      //   return this.$store.state.mountings.typeList
+      // },
+      // textureManageModal(){
+      //   return this.$store.state.mountings.textureManageModal
+      // },
+      // typeManageModal(){
+      //   return this.$store.state.mountings.typeManageModal
+      // }
     }
   }
 </script>

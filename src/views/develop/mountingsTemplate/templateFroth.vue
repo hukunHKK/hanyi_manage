@@ -15,7 +15,7 @@
         </Select>
       </FormItem>
       <FormItem label="配件类型">
-        <Input value="箱麦" style="width: 130px" disabled />
+        <Input value="泡沫" style="width: 130px" disabled />
       </FormItem>
     </Form>
     <Form :label-width="115" label-colon class="border-1px"
@@ -75,80 +75,22 @@
           </Select>
           <span>{{selectTexture | listToStr}}</span>
         </FormItem>
-        <span style="margin-left:25px;color: #0058cc;vertical-align: super;">箱卡类型：</span>
-        <FormItem label style="width:100%;" :label-width="20">
-          <Button style="margin-right: 5px" type="primary" @click="cartonManageBt">纸箱管理</Button>
-          <Select v-model="selectCarton" style="width:220px;margin-right:10px;" multiple :max-tag-count='2'>
-            <Option :value="item.cartonName" v-for='item in cartonList'>{{item.cartonName}}</Option>
-          </Select>
-          <span>{{selectCarton | listToStr}}</span>
-        </FormItem>
-        <FormItem label style="width:100%;" :label-width="20">
-          <Button style="margin-right: 5px" type="primary" @click="paperCardManageBt">纸卡管理</Button>
-          <Select v-model="selectPaperCard" style="width:220px;margin-right:10px;" multiple :max-tag-count='2'>
-            <Option :value="item.paperCardName" v-for='item in paperCardList'>{{item.paperCardName}}</Option>
-          </Select>
-          <span>{{selectPaperCard | listToStr}}</span>
-        </FormItem>
       </Form>
       <div style="margin-bottom: 10px;">
-        <span style="margin-left:25px;color: #0058cc;vertical-align: super;">纸质报价：</span>
+        <span style="margin-left:25px;color: #0058cc;vertical-align: super;">属性报价：</span>
       </div>
-      <div style="display: flex;padding: 0 10px;">
+      <div style="padding: 0 10px;">
         <!-- 单坑 -->
-        <Table :columns="pitThead.singleThead" :data="singlePitList" class="table-thead-blue"
-          style="margin-right:5px;flex: 1;">
-          <template slot-scope="{ row, index }" slot="pit">
-            <Input v-model='singlePitList[index].name'
-              placeholder="请输入名称" />
+        <Table :columns="priceThead" :data="priceList" class="table-thead-blue"
+          style="margin-right:5px;">
+          <template slot-scope="{ row, index }" slot="weight">
+            <Input v-model='priceList[index].weight' placeholder="请输入质量" />
           </template>
           <template slot-scope="{ row, index }" slot="price">
-            <Input v-model='singlePitList[index].price'
-              placeholder="请输入价格" />
+            <Input v-model='priceList[index].price' placeholder="请输入价格" />
           </template>
           <template slot-scope="{ row, index }" slot="action">
-            <remove-btn color="#1296db" @click.native="deleteFactoryItem(index)" border-color="#1296db"
-              style="padding:1px 4px;margin-left: -5px;" />
-          </template>
-        </Table>
-        <!-- 双坑 -->
-        <Table :columns="pitThead.doubleThead" :data="doublePitList" class="table-thead-blue"
-          style="margin-right:5px;flex: 1;">
-          <template slot-scope="{ row, index }" slot="pit">
-            <Input v-model='doublePitList[index].name' placeholder="请输入名称" />
-          </template>
-          <template slot-scope="{ row, index }" slot="price">
-            <Input v-model='doublePitList[index].price' placeholder="请输入价格" />
-          </template>
-          <template slot-scope="{ row, index }" slot="action">
-            <remove-btn color="#1296db" @click.native="deleteFactoryItem(index)" border-color="#1296db"
-              style="padding:1px 4px;margin-left: -5px;" />
-          </template>
-        </Table>
-        <!-- 三坑 -->
-        <Table :columns="pitThead.threeThead" :data="threePitList" class="table-thead-blue"
-          style="margin-right:5px;flex: 1;">
-          <template slot-scope="{ row, index }" slot="pit">
-            <Input v-model='threePitList[index].name' placeholder="请输入名称" />
-          </template>
-          <template slot-scope="{ row, index }" slot="price">
-            <Input v-model='threePitList[index].price' placeholder="请输入价格" />
-          </template>
-          <template slot-scope="{ row, index }" slot="action">
-            <remove-btn color="#1296db" @click.native="deleteFactoryItem(index)" border-color="#1296db"
-              style="padding:1px 4px;margin-left: -5px;" />
-          </template>
-        </Table>
-        <!-- E坑 -->
-        <Table :columns="pitThead.eThead" :data="ePitList" class="table-thead-blue" style="flex: 1;">
-          <template slot-scope="{ row, index }" slot="pit">
-            <Input v-model='ePitList[index].name' placeholder="请输入名称" />
-          </template>
-          <template slot-scope="{ row, index }" slot="price">
-            <Input v-model='ePitList[index].price' placeholder="请输入价格" />
-          </template>
-          <template slot-scope="{ row, index }" slot="action">
-            <remove-btn color="#1296db" @click.native="deleteFactoryItem(index)" border-color="#1296db"
+            <remove-btn color="#1296db" @click.native="deletePriceItem(index)" border-color="#1296db"
               style="padding:1px 4px;margin-left: -5px;" />
           </template>
         </Table>
@@ -295,8 +237,6 @@
         propList: [],
         fileList: [],
         selectTexture: [],
-        selectCarton: [],
-        selectPaperCard: [],
         tableKey: "",
         manufacturersInfo: {},
         uploadImgList: [],
@@ -315,8 +255,7 @@
             align: "center"
           }
         ],
-        manufacturersList: [
-          {
+        manufacturersList: [{
             name: "John Brown",
             id: 181241,
             address: "湖北",
@@ -335,169 +274,48 @@
             contact: "彭于晏"
           }
         ],
-        pitThead: {
-          singleThead: [
-            {
-              title: '单坑',
-              slot: 'pit'
-            },
-            {
-              title: '单价',
-              slot: 'price'
-            },
-            {
-              slot: 'action',
-              width:50,
-              renderHeader: (h, params) => {
-                return h('Button', {
-                  style: {
-                    padding: '4px',
-                    position: 'relative',
-                    right: ' 7px'
-                  },
-                  on: {
-                    click: () => {
-                      this.singlePitList.push({
-                        name: '',
-                        price: ''
-                      })
-                    }
+        priceThead: [
+          {
+            title: '重量',
+            slot: 'weight',
+            align:'center'
+          },
+          {
+            title: '单价',
+            slot: 'price',
+            align:'center'
+          },
+          {
+            slot: 'action',
+            width: 50,
+            renderHeader: (h, params) => {
+              return h('Button', {
+                style: {
+                  padding: '4px',
+                  position: 'relative',
+                  right: ' 7px'
+                },
+                on: {
+                  click: () => {
+                    this.priceList.push({
+                      weight: '',
+                      price: ''
+                    })
                   }
-                }, [h('Icon', {
-                  attrs: {
-                    type: 'md-add'
-                  },
-                  style: {
-                    fontSize: '20px'
-                  }
-                }, '')]);
-              },
-              align: 'center'
-            }
-          ],
-          doubleThead: [{
-              title: '双坑',
-              slot: 'pit'
+                }
+              }, [h('Icon', {
+                attrs: {
+                  type: 'md-add'
+                },
+                style: {
+                  fontSize: '20px'
+                }
+              }, '')]);
             },
-            {
-              title: '单价',
-              slot: 'price'
-            },
-            {
-              slot: 'action',
-              width:50,
-              renderHeader: (h, params) => {
-                return h('Button', {
-                  style: {
-                    padding: '4px',
-                    position: 'relative',
-                    right: '7px'
-                  },
-                  on: {
-                    click: () => {
-                      this.doublePitList.push({
-                        property: {},
-                        name: '',
-                        price: ''
-                      })
-                    }
-                  }
-                }, [h('Icon', {
-                  attrs: {
-                    type: 'md-add'
-                  },
-                  style: {
-                    fontSize: '20px'
-                  }
-                }, '')]);
-              },
-              align: 'center'
-            }
-          ],
-          threeThead: [
-            {
-              title: '三坑',
-              slot: 'pit'
-            },
-            {
-              title: '单价',
-              slot: 'price'
-            },
-            {
-              slot: 'action',
-              width:50,
-              renderHeader: (h, params) => {
-                return h('Button', {
-                  style: {
-                    padding: '4px',
-                    position: 'relative',
-                    right: '7px'
-                  },
-                  on: {
-                    click: () => {
-                      this.threePitList.push({
-                        property: {},
-                        name: '',
-                        price: ''
-                      })
-                    }
-                  }
-                }, [h('Icon', {
-                  attrs: {
-                    type: 'md-add'
-                  },
-                  style: {
-                    fontSize: '20px'
-                  }
-                }, '')]);
-              },
-              align: 'center'
-            }
-          ],
-          eThead: [
-            {
-              title: 'E坑',
-              slot: 'pit'
-            },
-            {
-              title: '单价',
-              slot: 'price'
-            },
-            {
-              slot: 'action',
-              width:50,
-              renderHeader: (h, params) => {
-                return h('Button', {
-                  style: {
-                    padding: '4px',
-                    position: 'relative',
-                    right: '7px'
-                  },
-                  on: {
-                    click: () => {
-                      this.ePitList.push({
-                        name:'',
-                        price:''
-                      })
-                    }
-                  }
-                }, [h('Icon', {
-                  attrs: {
-                    type: 'md-add'
-                  },
-                  style: {
-                    fontSize: '20px'
-                  }
-                }, '')]);
-              },
-              align: 'center'
-            }
-          ]
-        },
-        singlePitList: [],
-        doublePitList: [],
-        threePitList: [],
-        ePitList: [],
+            align: 'center'
+          }
+        ],
+        priceList: []
       };
     },
     methods: {
@@ -545,17 +363,7 @@
         this.$axios.post('/a/a', temp)
       },
       storage() {
-        let props = {
-          singkePit:{}
-        }
-        this.templateData.hyFactoryPropertyMap.property[0] = props
-        this.singlePitList.forEach(item=>{
-          props.singkePit[item.name] = item.price
-        })
-        console.log(this.templateData.hyFactoryPropertyMap.property[0]);
-        
-        // this.templateData.hyFactoryPropertyMap.property[0] = {}
-        // this.close();
+        this.close();
       },
       close() {
         this.$store.commit("setMyModalShow", false);
@@ -566,19 +374,13 @@
       textureManageBt() {
         this.$store.commit('setTextureManageModal', true)
       },
-      cartonManageBt() {
-        this.$store.commit('setCartonManageModal', true)
-      },
-      paperCardManageBt() {
-        this.$store.commit('setPaperCardManageModal', true)
-      },
+      deletePriceItem(index){
+        this.priceList.splice(index,1)
+      }
     },
     computed: {
       ...mapState({
-        textureList: state => state.mountings.textureList,
-        typeList: state => state.mountings.typeList,
-        cartonList: state => state.mountings.cartonList,
-        paperCardList: state => state.mountings.paperCardList,
+        textureList: state => state.mountings.textureList
       })
     },
     watch: {
